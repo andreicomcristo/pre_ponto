@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/postgres/postgresql-9.0-801.jdbc4.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/ucanaccess-5.0.1.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/commons-lang3-3.8.1.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/hsqldb-2.5.0.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/jackcess-3.0.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,1 @@
+Tue Dec 28 16:01:44 BRT 2021-UCAExc:::5.0.1 given file does not exist: k:\NPD\Database_ponto\att2000.mdb
