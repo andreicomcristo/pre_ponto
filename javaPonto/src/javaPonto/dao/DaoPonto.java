@@ -340,7 +340,7 @@ public class DaoPonto {
 
 			try {
 
-				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? order by CHECKINOUT.CHECKTIME");
+				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? order by CHECKINOUT.CHECKTIME");
 
 				stmt.setDate(1, dataConsulta);
 
