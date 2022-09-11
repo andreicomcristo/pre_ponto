@@ -21,6 +21,8 @@ import javaPonto.domain.Unidade;
 
 public class DaoPonto {
 
+	Configuracao configuracao = new Configuracao();
+	
 	Connection con = null;
 
 	public static void escreverLog(Exception e, String complemento) {
@@ -485,7 +487,7 @@ public class DaoPonto {
 
 						java.sql.Date momento = rs.getDate("momento");
 						Long momentoInicial = momento.getTime();
-						momentoInicial = momentoInicial - (2*24*60*60*10*10*10);//menos dois dias
+						momentoInicial = momentoInicial - (configuracao.getDias()*24*60*60*10*10*10);//menos dois dias
 						java.sql.Date momentoFinal = new java.sql.Date(momentoInicial);   
 						listaConsulta.add(momentoFinal);
 

@@ -4,6 +4,8 @@ package javaPonto.configuracao;
 
 public class Configuracao {
 
+	int dias = 10;
+	
 	//Para o HGE
 	//Long idUnidade = 1L;
 	
@@ -11,10 +13,10 @@ public class Configuracao {
 	//Long idUnidade = 2L;
 	
 	//Para HOSPITAL REGIONAL DO NORTE
-	Long idUnidade = 3L;
+	//Long idUnidade = 3L;
 		
 	//Para SAMU MACEIO
-	//Long idUnidade = 4L;
+	Long idUnidade = 4L;
 	
 	//Para SAMU ARAPIRACA
 	//Long idUnidade = 5L;
@@ -40,6 +42,7 @@ public class Configuracao {
 	
 
 	
+	
 	public Configuracao() {
 		
 	}
@@ -57,10 +60,23 @@ public class Configuracao {
 		this.idUnidade = idUnidade;
 	}
 
+	
+	
+	
+	public int getDias() {
+		return dias;
+	}
+
+	public void setDias(int dias) {
+		this.dias = dias;
+	}
+
 	@Override
 	public String toString() {
-		return "Configuracao [idUnidade=" + idUnidade + "]";
+		return "Configuracao [dias=" + dias + ", idUnidade=" + idUnidade + "]";
 	}
+
+	
 
 
 	
