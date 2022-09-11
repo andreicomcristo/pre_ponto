@@ -7,19 +7,23 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
+import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
 
 
 public class ConexaoAccess {
 
 	
+	
 	// Conexao com access
     public static Connection getConnection()  {
     	Connection con = null;
     	
     try {
+    	Configuracao configuracao = new Configuracao();
+    	
     	Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-    	con =  DriverManager.getConnection ("jdbc:ucanaccess://c:/zktime/att2000.mdb");
+    	con =  DriverManager.getConnection (configuracao.getCaminhoBanco());
     	//con = DriverManager.getConnection ("jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb");
     } catch (Exception e){
     	DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O ACCESS");

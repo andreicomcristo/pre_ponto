@@ -4,7 +4,11 @@ package javaPonto.configuracao;
 
 public class Configuracao {
 
-	int dias = 10;
+	int dias = 2;
+	//int dias = 10;
+	
+	String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	
 	//Para o HGE
 	//Long idUnidade = 1L;
@@ -69,6 +73,16 @@ public class Configuracao {
 
 	public void setDias(int dias) {
 		this.dias = dias;
+	}
+
+	
+	
+	public String getCaminhoBanco() {
+		return caminhoBanco;
+	}
+
+	public void setCaminhoBanco(String caminhoBanco) {
+		this.caminhoBanco = caminhoBanco;
 	}
 
 	@Override
