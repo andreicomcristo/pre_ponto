@@ -5,13 +5,13 @@ package javaPonto.configuracao;
 public class Configuracao {
 
 	//Para o HGE
-	Long idUnidade = 1L;
+	//Long idUnidade = 1L;
 	
 	//Para HOSPITAL REGIONAL DA MATA
 	//Long idUnidade = 2L;
 	
 	//Para HOSPITAL REGIONAL DO NORTE
-	//Long idUnidade = 3L;
+	Long idUnidade = 3L;
 		
 	//Para SAMU MACEIO
 	//Long idUnidade = 4L;
@@ -33,6 +33,10 @@ public class Configuracao {
 
 	//Para HOSPITAL DE EMERGENCIA DANIEL HOULY
 	//Long idUnidade = 6L;	
+	
+	
+	//Para HOSPITAL DA CRIANCA
+	//Long idUnidade = 11L;	
 	
 
 	

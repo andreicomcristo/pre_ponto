@@ -19,8 +19,8 @@ public class ConexaoAccess {
     	
     try {
     	Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-    	//con =  DriverManager.getConnection ("jdbc:ucanaccess://c:/zktime/att2000.mdb");
-    	con = DriverManager.getConnection ("jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb");
+    	con =  DriverManager.getConnection ("jdbc:ucanaccess://c:/zktime/att2000.mdb");
+    	//con = DriverManager.getConnection ("jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb");
     } catch (Exception e){
     	DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O ACCESS");
         

@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 public class ImportacaoRegistrosPontoFrame extends JFrame {
 
 	DaoPonto daoPonto = new DaoPonto();
+	boolean threadViva = false;
 	
 	private JPanel contentPane;
 
@@ -60,10 +61,12 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				if(threadViva==false) {
 				ThreadImportarRegistros threadImportarRegistros = new ThreadImportarRegistros();
 				Thread t1 = new Thread(threadImportarRegistros);
 				t1.start();
-				
+				threadViva = true;
+				}
 				
 				
 				
