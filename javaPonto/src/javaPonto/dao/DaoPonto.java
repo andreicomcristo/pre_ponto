@@ -18,6 +18,7 @@ import javaPonto.conexao.ConnectionFactory;
 import javaPonto.configuracao.Configuracao;
 import javaPonto.domain.RegistroPonto;
 import javaPonto.domain.Unidade;
+import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 
 public class DaoPonto {
 
@@ -511,7 +512,7 @@ public class DaoPonto {
 
 	} 
 
-	public void inserirRegistrosNoPostgres(List<RegistroPonto> lista){
+	public void inserirRegistrosNoPostgres(List<RegistroPonto> lista, ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame){
 
 		try {
 			if(!lista.isEmpty()){	
@@ -520,6 +521,9 @@ public class DaoPonto {
 				if(con!=null){
 					if(!con.isClosed()){
 						for(int i=0;i<lista.size();i++){
+							
+							importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
+							
 							if(registroJaCadastrado(lista.get(i), con) == false ){
 								// nome da tebela
 								PreparedStatement stmt = null;

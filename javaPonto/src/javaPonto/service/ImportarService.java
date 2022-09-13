@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import javaPonto.dao.DaoPonto;
 import javaPonto.domain.RegistroPonto;
+import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 
 	
 public class ImportarService {
@@ -17,9 +18,9 @@ public class ImportarService {
 	DaoPonto daoPonto = new DaoPonto();
 	
 	
-	public void importarRegistrosPonto() {
+	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame) {
 		if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
-			daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)));
+			daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)), importacaoRegistrosPontoFrame);
 		}
 		//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess( new java.sql.Date(2021-1900, 11, 1) ));
 	}

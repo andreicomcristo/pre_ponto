@@ -29,6 +29,11 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 	boolean threadViva = false;
 	
 	private JPanel contentPane;
+	
+	public ImportacaoRegistrosPontoFrame frame1;
+	public void setFrame(ImportacaoRegistrosPontoFrame f) {
+		frame1 = f;
+	}
 
 	/**
 	 * Launch the application.
@@ -39,6 +44,7 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 				try {
 					ImportacaoRegistrosPontoFrame frame = new ImportacaoRegistrosPontoFrame();
 					frame.setVisible(true);
+					frame.setFrame(frame);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,7 +68,7 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(threadViva==false) {
-				ThreadImportarRegistros threadImportarRegistros = new ThreadImportarRegistros();
+				ThreadImportarRegistros threadImportarRegistros = new ThreadImportarRegistros(frame1);
 				Thread t1 = new Thread(threadImportarRegistros);
 				t1.start();
 				threadViva = true;
