@@ -9,7 +9,6 @@ public class Configuracao {
 	
 	
 	
-	
 	//Para o HGE
 	//Long idUnidade = 1L;
 	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
