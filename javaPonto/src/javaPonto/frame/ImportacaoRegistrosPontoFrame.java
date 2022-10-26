@@ -66,7 +66,7 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnNewButton = new JButton("Thread Importar Registros de Ponto");
+		JButton btnNewButton = new JButton("Thread Importar Registros de Ponto ["+configuracao.getDias()+" dia(s)]");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
