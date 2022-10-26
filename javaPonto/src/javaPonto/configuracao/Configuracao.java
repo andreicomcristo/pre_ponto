@@ -4,14 +4,25 @@ package javaPonto.configuracao;
 
 public class Configuracao {
 
-	int dias = 2;
-	//int dias = 10;
 	
+	boolean exibirImportarRegistros = true;
+	
+	boolean exibirConverteCpf = false;
+	
+	boolean exibirApagarRegistros = false;
+	
+	
+	
+	//int dias = 2;
+	//int dias = 10;
+	//int dias = 30;
+	int dias = 60;
 	
 	
 	//Para o HGE
 	//Long idUnidade = 1L;
 	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
+	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL REGIONAL DA MATA
 	//Long idUnidade = 2L;
@@ -38,8 +49,8 @@ public class Configuracao {
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL DA MULHER MACEIO
-	Long idUnidade = 7L;
-	String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	//Long idUnidade = 7L;
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para TREINAMENTO
 	//Long idUnidade = 10L;	
@@ -50,8 +61,8 @@ public class Configuracao {
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL DA CRIANCA
-	//Long idUnidade = 11L;	
-	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	Long idUnidade = 11L;	
+	String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HEMOAL MACEIO
 	//Long idUnidade = 12L;	
@@ -103,11 +114,40 @@ public class Configuracao {
 		this.caminhoBanco = caminhoBanco;
 	}
 
-	@Override
-	public String toString() {
-		return "Configuracao [dias=" + dias + ", idUnidade=" + idUnidade + "]";
+	
+	
+	public boolean isExibirImportarRegistros() {
+		return exibirImportarRegistros;
 	}
 
+	public void setExibirImportarRegistros(boolean exibirImportarRegistros) {
+		this.exibirImportarRegistros = exibirImportarRegistros;
+	}
+
+	public boolean isExibirConverteCpf() {
+		return exibirConverteCpf;
+	}
+
+	public void setExibirConverteCpf(boolean exibirConverteCpf) {
+		this.exibirConverteCpf = exibirConverteCpf;
+	}
+
+	public boolean isExibirApagarRegistros() {
+		return exibirApagarRegistros;
+	}
+
+	public void setExibirApagarRegistros(boolean exibirApagarRegistros) {
+		this.exibirApagarRegistros = exibirApagarRegistros;
+	}
+
+	@Override
+	public String toString() {
+		return "Configuracao [exibirImportarRegistros=" + exibirImportarRegistros + ", exibirConverteCpf="
+				+ exibirConverteCpf + ", exibirApagarRegistros=" + exibirApagarRegistros + ", dias=" + dias
+				+ ", idUnidade=" + idUnidade + ", caminhoBanco=" + caminhoBanco + "]";
+	}
+
+	
 	
 
 

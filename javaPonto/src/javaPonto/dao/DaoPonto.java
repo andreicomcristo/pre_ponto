@@ -525,38 +525,42 @@ public class DaoPonto {
 							importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 							
 							if(registroJaCadastrado(lista.get(i), con) == false ){
-								// nome da tebela
-								PreparedStatement stmt = null;
-								if(lista.get(i).getIdPessoaFk()!=null) {
-								stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)");
-								stmt.setString(1, lista.get(i).getCpf());            
-								stmt.setString(2, lista.get(i).getNome());
-								stmt.setString(3, lista.get(i).getNumeroPonto());
-								stmt.setDate(4,  lista.get(i).getMomento());
-								stmt.setTime(5, lista.get(i).getHora());
-								stmt.setString(6, lista.get(i).getSentido());
-								stmt.setString(7, lista.get(i).getRelogio());
-								stmt.setLong(8, lista.get(i).getIdUnidadeFk());
-								stmt.setLong(9, lista.get(i).getIdPessoaFk());
-								stmt.setString(10, "");
-								stmt.setString(11, "N");
-								}else {
-									stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)");
-									stmt.setString(1, lista.get(i).getCpf());            
-									stmt.setString(2, lista.get(i).getNome());
-									stmt.setString(3, lista.get(i).getNumeroPonto());
-									stmt.setDate(4,  lista.get(i).getMomento());
-									stmt.setTime(5, lista.get(i).getHora());
-									stmt.setString(6, lista.get(i).getSentido());
-									stmt.setString(7, lista.get(i).getRelogio());
-									stmt.setLong(8, lista.get(i).getIdUnidadeFk());
-									stmt.setString(9, "");
-									stmt.setString(10, "N");
+								if(lista.get(i).getCpf()!=null){
+									if(lista.get(i).getCpf().length()==11){
+										// nome da tebela
+										PreparedStatement stmt = null;
+										if(lista.get(i).getIdPessoaFk()!=null) {
+										stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)");
+										stmt.setString(1, lista.get(i).getCpf());            
+										stmt.setString(2, lista.get(i).getNome());
+										stmt.setString(3, lista.get(i).getNumeroPonto());
+										stmt.setDate(4,  lista.get(i).getMomento());
+										stmt.setTime(5, lista.get(i).getHora());
+										stmt.setString(6, lista.get(i).getSentido());
+										stmt.setString(7, lista.get(i).getRelogio());
+										stmt.setLong(8, lista.get(i).getIdUnidadeFk());
+										stmt.setLong(9, lista.get(i).getIdPessoaFk());
+										stmt.setString(10, "");
+										stmt.setString(11, "N");
+										}else {
+											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)");
+											stmt.setString(1, lista.get(i).getCpf());            
+											stmt.setString(2, lista.get(i).getNome());
+											stmt.setString(3, lista.get(i).getNumeroPonto());
+											stmt.setDate(4,  lista.get(i).getMomento());
+											stmt.setTime(5, lista.get(i).getHora());
+											stmt.setString(6, lista.get(i).getSentido());
+											stmt.setString(7, lista.get(i).getRelogio());
+											stmt.setLong(8, lista.get(i).getIdUnidadeFk());
+											stmt.setString(9, "");
+											stmt.setString(10, "N");
+										}
+		
+		
+										stmt.execute();
+										stmt.close();
+									}
 								}
-
-
-								stmt.execute();
-								stmt.close();
 							}
 						}
 					}  
@@ -582,4 +586,48 @@ public class DaoPonto {
 		}
 	}
 
+	
+	
+	
+	
+	public List<RegistroPonto> apagarTabelaCheckInOutAccess(java.sql.Date dataConsulta) {
+		
+		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
+
+		try {
+
+			con = ConexaoAccess.getConnection();
+
+			try {
+
+				PreparedStatement stmt = con.prepareStatement("delete from CHECKINOUT where CHECKTIME <= (?) ");
+
+				stmt.setDate(1, dataConsulta);
+				
+				stmt.execute();
+				
+
+
+			} finally {
+				try {
+					if(con!=null){
+						if(!con.isClosed()){
+							con.close();
+						}}
+				} catch (Exception e) {escreverLog(e, "COLETANDO REGISTROS NO ACCESS");
+				e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "COLETANDO REGISTROS NO ACCESS");
+		e.printStackTrace();
+		}
+
+		return listaConsulta;
+
+	} 
+
+	
+	
+	
+	
 }
