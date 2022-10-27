@@ -15,9 +15,13 @@ import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 public class ThreadImportarRegistros implements Runnable{
 
 	ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame;
+	String dataInicial;
+	String dataFinal;
 	
-	public ThreadImportarRegistros(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame) {
+	public ThreadImportarRegistros(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal) {
 		this.importacaoRegistrosPontoFrame = importacaoRegistrosPontoFrame;
+		this.dataInicial = dataInicial;
+		this.dataFinal = dataFinal;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -64,7 +68,7 @@ public class ThreadImportarRegistros implements Runnable{
 			if(problemaConexao==false) {
 				System.out.println("Iniciando :"+new Date());
 				importacaoRegistrosPontoFrame.setTitle("");
-				importarService.importarRegistrosPonto(importacaoRegistrosPontoFrame);
+				importarService.importarRegistrosPonto(importacaoRegistrosPontoFrame, dataInicial, dataFinal);
 				importacaoRegistrosPontoFrame.setTitle("");
 				System.out.println("Findando  :"+new Date());
 			}

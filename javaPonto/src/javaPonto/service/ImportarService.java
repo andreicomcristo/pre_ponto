@@ -18,9 +18,16 @@ public class ImportarService {
 	DaoPonto daoPonto = new DaoPonto();
 	
 	
-	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame) {
-		if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
-			daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)), importacaoRegistrosPontoFrame);
+	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal) {
+		
+		if(dataInicial.length()==0|| dataFinal.length()==0) {
+			if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
+				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)), importacaoRegistrosPontoFrame);
+			}
+		}else {
+			if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
+				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal), importacaoRegistrosPontoFrame);
+			}
 		}
 		//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess( new java.sql.Date(2021-1900, 11, 1) ));
 	}
@@ -73,6 +80,103 @@ public class ImportarService {
 
 		
 	}
+	
+	
+	
+	
+	public boolean diaValido(String texto) {
+		boolean resposta = true;
+		
+		if(texto==null) {return false;}
+		if(texto.length()<1) {return false;}
+		
+		for(int i=0;i<texto.length();i++) {
+			String subtexto = texto.substring(i, i+1);
+			if(
+				(!subtexto.equalsIgnoreCase("0")) && 
+				(!subtexto.equalsIgnoreCase("1")) &&
+				(!subtexto.equalsIgnoreCase("2")) &&
+				(!subtexto.equalsIgnoreCase("3")) &&
+				(!subtexto.equalsIgnoreCase("4")) &&
+				(!subtexto.equalsIgnoreCase("5")) &&
+				(!subtexto.equalsIgnoreCase("6")) &&
+				(!subtexto.equalsIgnoreCase("7")) &&
+				(!subtexto.equalsIgnoreCase("8")) &&
+				(!subtexto.equalsIgnoreCase("9")) 
+				
+					) {return false;}
+		}
+		
+		if( (Integer.parseInt(texto)>31) || (Integer.parseInt(texto)<1) ) {return false;}
+		
+		return resposta;
+	}
+	
+	
+	
+	
+	
+	
+	public boolean mesValido(String texto) {
+		boolean resposta = true;
+		
+		if(texto==null) {return false;}
+		if(texto.length()<1) {return false;}
+		
+		for(int i=0;i<texto.length();i++) {
+			String subtexto = texto.substring(i, i+1);
+			if(
+				(!subtexto.equalsIgnoreCase("0")) && 
+				(!subtexto.equalsIgnoreCase("1")) &&
+				(!subtexto.equalsIgnoreCase("2")) &&
+				(!subtexto.equalsIgnoreCase("3")) &&
+				(!subtexto.equalsIgnoreCase("4")) &&
+				(!subtexto.equalsIgnoreCase("5")) &&
+				(!subtexto.equalsIgnoreCase("6")) &&
+				(!subtexto.equalsIgnoreCase("7")) &&
+				(!subtexto.equalsIgnoreCase("8")) &&
+				(!subtexto.equalsIgnoreCase("9")) 
+				
+					) {return false;}
+		}
+		
+		if( (Integer.parseInt(texto)>12) || (Integer.parseInt(texto)<1) ) {return false;}
+		
+		return resposta;
+	}
+	
+	
+	
+	
+	
+	public boolean anoValido(String texto) {
+		boolean resposta = true;
+		
+		if(texto==null) {return false;}
+		if(texto.length()<1) {return false;}
+		
+		for(int i=0;i<texto.length();i++) {
+			String subtexto = texto.substring(i, i+1);
+			if(
+				(!subtexto.equalsIgnoreCase("0")) && 
+				(!subtexto.equalsIgnoreCase("1")) &&
+				(!subtexto.equalsIgnoreCase("2")) &&
+				(!subtexto.equalsIgnoreCase("3")) &&
+				(!subtexto.equalsIgnoreCase("4")) &&
+				(!subtexto.equalsIgnoreCase("5")) &&
+				(!subtexto.equalsIgnoreCase("6")) &&
+				(!subtexto.equalsIgnoreCase("7")) &&
+				(!subtexto.equalsIgnoreCase("8")) &&
+				(!subtexto.equalsIgnoreCase("9")) 
+				
+					) {return false;}
+		}
+		
+		if( (Integer.parseInt(texto)>3000) || (Integer.parseInt(texto)<2020) ) {return false;}
+		
+		return resposta;
+	}
+	
 	
 	
 }

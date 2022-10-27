@@ -25,6 +25,8 @@ public class DaoPonto {
 	Configuracao configuracao = new Configuracao();
 	
 	Connection con = null;
+	
+	Connection conPostgres = null;
 
 	public static void escreverLog(Exception e, String complemento) {
 
@@ -340,13 +342,14 @@ public class DaoPonto {
 		try {
 
 			con = ConexaoAccess.getConnection();
+			conPostgres = ConnectionFactory.getConnection();
 
 			try {
 
 				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? order by CHECKINOUT.CHECKTIME");
 
 				stmt.setDate(1, dataConsulta);
-
+				
 
 
 				ResultSet rs = stmt.executeQuery();
@@ -366,11 +369,11 @@ public class DaoPonto {
 					Long idUnidadeFk = configuracao.getIdUnidade();
 					
 					RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, momento, hora, relogio, cpf, idUnidadeFk, null);
-					if(!cpf.equalsIgnoreCase("")) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, con));}
+					if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
 					
-					
-					listaConsulta.add(registroPonto);
-
+					if(cpf.length()==11) {
+						listaConsulta.add(registroPonto);
+					}
 				}
 
 
@@ -393,6 +396,71 @@ public class DaoPonto {
 	} 
 
 
+	
+	public List<RegistroPonto> selectListaNomesAccessComDatas( String dataInicial, String dataFinal) {
+		Configuracao configuracao = new Configuracao();
+		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
+
+		try {
+
+			con = ConexaoAccess.getConnection();
+			conPostgres = ConnectionFactory.getConnection();
+
+			try {
+
+				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? and CHECKINOUT.CHECKTIME < ?  order by CHECKINOUT.CHECKTIME");
+
+				stmt.setString(1, dataInicial);
+				stmt.setString(2, dataFinal);
+				
+
+
+				ResultSet rs = stmt.executeQuery();
+
+				while(rs.next()) {
+
+					String nome = rs.getString("nome");
+					
+					String cpf = "";
+					if(eUmCpf(nome) == true) {cpf = rs.getString("nome"); nome = "";}
+					
+					String numeroPonto = rs.getString("numeroPonto");
+					java.sql.Date momento = rs.getDate("momento");
+					Time hora = rs.getTime("momento");
+					String sentido = rs.getString("sentido");
+					String relogio = rs.getString("relogio");
+					Long idUnidadeFk = configuracao.getIdUnidade();
+					
+					RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, momento, hora, relogio, cpf, idUnidadeFk, null);
+					if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+					
+					if(cpf.length()==11) {
+						listaConsulta.add(registroPonto);
+					}
+				}
+
+
+			} finally {
+				try {
+					if(con!=null){
+						if(!con.isClosed()){
+							con.close();
+						}}
+				} catch (Exception e) {escreverLog(e, "COLETANDO REGISTROS NO ACCESS");
+				e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "COLETANDO REGISTROS NO ACCESS");
+		e.printStackTrace();
+		}
+
+		return listaConsulta;
+
+	} 
+
+	
+	
+	
 	public List<String> selectListaPontoNomeAccess() {
 		List<String> listaConsulta = new ArrayList<String>();
 
@@ -525,8 +593,7 @@ public class DaoPonto {
 							importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 							
 							if(registroJaCadastrado(lista.get(i), con) == false ){
-								if(lista.get(i).getCpf()!=null){
-									if(lista.get(i).getCpf().length()==11){
+										
 										// nome da tebela
 										PreparedStatement stmt = null;
 										if(lista.get(i).getIdPessoaFk()!=null) {
@@ -559,8 +626,7 @@ public class DaoPonto {
 		
 										stmt.execute();
 										stmt.close();
-									}
-								}
+								
 							}
 						}
 					}  

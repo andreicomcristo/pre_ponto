@@ -13,15 +13,15 @@ public class Configuracao {
 	
 	
 	
-	//int dias = 2;
+	int dias = 2;
 	//int dias = 10;
 	//int dias = 30;
-	int dias = 60;
+	//int dias = 60;
 	
 	
 	//Para o HGE
-	//Long idUnidade = 1L;
-	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
+	Long idUnidade = 1L;
+	String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL REGIONAL DA MATA
@@ -61,8 +61,8 @@ public class Configuracao {
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL DA CRIANCA
-	Long idUnidade = 11L;	
-	String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	//Long idUnidade = 11L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HEMOAL MACEIO
 	//Long idUnidade = 12L;	
