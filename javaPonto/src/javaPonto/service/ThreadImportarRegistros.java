@@ -67,7 +67,7 @@ public class ThreadImportarRegistros implements Runnable{
 			
 			if(problemaConexao==false) {
 				System.out.println("Iniciando :"+new Date());
-				importacaoRegistrosPontoFrame.setTitle("");
+				importacaoRegistrosPontoFrame.setTitle("Coletando Registros");
 				importarService.importarRegistrosPonto(importacaoRegistrosPontoFrame, dataInicial, dataFinal);
 				importacaoRegistrosPontoFrame.setTitle("");
 				System.out.println("Findando  :"+new Date());
