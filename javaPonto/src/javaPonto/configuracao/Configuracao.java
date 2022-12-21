@@ -20,8 +20,8 @@ public class Configuracao {
 	
 	
 	//Para o HGE
-	Long idUnidade = 1L;
-	String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
+	//Long idUnidade = 1L;
+	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL REGIONAL DA MATA
@@ -57,8 +57,8 @@ public class Configuracao {
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 
 	//Para HOSPITAL DE EMERGENCIA DANIEL HOULY
-	//Long idUnidade = 6L;	
-	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	Long idUnidade = 6L;	
+	String caminhoBanco = "jdbc:ucanaccess://.//srvadagreste//sistemas//PONTO//att2000.mdb";
 	
 	//Para HOSPITAL DA CRIANCA
 	//Long idUnidade = 11L;	
