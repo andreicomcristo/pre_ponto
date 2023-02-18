@@ -122,6 +122,23 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 				String mesFinal = textField5.getText();
 				String anoFinal = textField6.getText();
 				
+				if(diaInicial==null) {diaInicial="";}
+				if(mesInicial==null) {mesInicial="";}
+				if(anoInicial==null) {anoInicial="";}
+				if(diaFinal==null) {diaFinal="";}
+				if(mesFinal==null) {mesFinal="";}
+				if(anoFinal==null) {anoFinal="";}
+				
+				
+				if((diaInicial+mesInicial+anoInicial+diaFinal+mesFinal+anoFinal).contains(" ")) {
+					diaInicial="";
+					mesInicial="";
+					anoInicial="";
+					diaFinal="";
+					mesFinal="";
+					anoFinal="";
+				}
+				
 				boolean diaInicialValido = importarService.diaValido(diaInicial);
 				boolean mesInicialValido = importarService.mesValido(mesInicial);
 				boolean anoInicialValido = importarService.anoValido(anoInicial);
