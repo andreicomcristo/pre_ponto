@@ -20,6 +20,9 @@ public class ImportarService {
 	
 	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal) {
 		
+		System.out.println(daoPonto.selectMaximaDataAccess().get(0));
+		
+		
 		if(dataInicial.length()==0|| dataFinal.length()==0) {
 			if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
 				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)), importacaoRegistrosPontoFrame);
@@ -29,6 +32,7 @@ public class ImportarService {
 				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal), importacaoRegistrosPontoFrame);
 			}
 		}
+		
 		//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess( new java.sql.Date(2021-1900, 11, 1) ));
 	}
 	

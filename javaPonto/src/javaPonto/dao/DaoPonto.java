@@ -272,11 +272,11 @@ public class DaoPonto {
 				while(rs.next()) {
 
 					if(registroPonto.getSentido().equalsIgnoreCase("E")) {
-						if((rs.getString("sentido").equalsIgnoreCase("E")) || (rs.getString("sentido").equalsIgnoreCase("A")) || (rs.getString("sentido").equalsIgnoreCase("X"))  ) {resposta = true; break;}
+						if((rs.getString("sentido").equalsIgnoreCase("E")) || (rs.getString("sentido").equalsIgnoreCase("A")) || (rs.getString("sentido").equalsIgnoreCase("X"))   || (rs.getString("sentido").equalsIgnoreCase("S")) || (rs.getString("sentido").equalsIgnoreCase("B")) || (rs.getString("sentido").equalsIgnoreCase("Y"))   ) {resposta = true; break;}
 					}
 					
 					if(registroPonto.getSentido().equalsIgnoreCase("S")) {
-						if((rs.getString("sentido").equalsIgnoreCase("S")) || (rs.getString("sentido").equalsIgnoreCase("B")) || (rs.getString("sentido").equalsIgnoreCase("Y"))  ) {resposta = true; break;}
+						if((rs.getString("sentido").equalsIgnoreCase("E")) || (rs.getString("sentido").equalsIgnoreCase("A")) || (rs.getString("sentido").equalsIgnoreCase("X"))   || (rs.getString("sentido").equalsIgnoreCase("S")) || (rs.getString("sentido").equalsIgnoreCase("B")) || (rs.getString("sentido").equalsIgnoreCase("Y"))  ) {resposta = true; break;}
 					}
 					
 
