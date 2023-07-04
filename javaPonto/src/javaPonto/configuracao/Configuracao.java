@@ -71,6 +71,14 @@ public class Configuracao {
 	//Para HOSPITAL DO CORACAO MACEIO
 	//Long idUnidade = 13L;	
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	
+	//Para UPA JARAGUA
+	//Long idUnidade = 15L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	
+	//Para UPA ARAPIRACA
+	//Long idUnidade = 14L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 
 	
 
