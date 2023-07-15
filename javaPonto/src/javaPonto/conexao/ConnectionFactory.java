@@ -46,7 +46,7 @@ public class ConnectionFactory {
 	        props.setProperty("currentSchema", "public");
 	        
 	                                                                // caminho / nome do banco / senha
-	         con =  DriverManager.getConnection ("jdbc:postgresql://186.249.51.220:5432/folha_hom", props);
+	         con =  DriverManager.getConnection ("jdbc:postgresql://186.249.51.220:5432/folha", props);
 	            } catch (Exception e){DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O POSTGRES");
 	                
 	            }
