@@ -12,5 +12,11 @@
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/hsqldb-2.5.0.jar"/>
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/access/jackcess-3.0.1.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre11.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre11-javadoc.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre11-sources.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8-javadoc.jar"/>
+	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

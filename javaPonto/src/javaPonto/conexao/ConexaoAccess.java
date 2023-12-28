@@ -2,10 +2,6 @@ package javaPonto.conexao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
-
-import javax.swing.JOptionPane;
 
 import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
@@ -24,9 +20,9 @@ public class ConexaoAccess {
     	
     	Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
     	con =  DriverManager.getConnection (configuracao.getCaminhoBanco());
-    	//con = DriverManager.getConnection ("jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb");
+    	
     } catch (Exception e){
-    	DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O ACCESS");
+    	DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM ZKTIME");
         
     }
     
@@ -35,25 +31,31 @@ public class ConexaoAccess {
 	
     }
     
-	
-	/*
-	// Conexao com access
-    public static Connection getConnection() throws SQLException {
     
-      String dataBaseURL = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
-    	//String dataBaseURL = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
-    	Connection connection = null;
-    try {
-    	connection  = DriverManager.getConnection(dataBaseURL);
-       
-       
-	}catch (Exception e) {
-		JOptionPane.showMessageDialog(null, e.getMessage());
-	}
- 
-	return connection;
+    
+    public static Connection getConnectionSqlServer() {
+        Connection con = null;
+
+        try {
+            // Informações de conexão
+            String url = "jdbc:sqlserver://sua_url_do_servidor:porta;databaseNome=seu_banco_de_dados";
+            String usuario = "seu_usuario";
+            String senha = "sua_senha";
+
+            // Carrega o driver JDBC do SQL Server
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            // Cria a conexão
+            con = DriverManager.getConnection(url, usuario, senha);
+        } catch (Exception e) {
+        	DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM ZKTIME");
+            e.printStackTrace();
+        } 
+
+        return con;
     }
-    */
+	
+	
     
     
 }
