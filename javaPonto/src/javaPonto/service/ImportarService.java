@@ -22,6 +22,7 @@ public class ImportarService {
 		
 		List<java.sql.Date> listaDataAtual = daoPonto.selectMaximaDataPostgres();
 		
+		
 		if(dataInicial.length()==0|| dataFinal.length()==0) {
 			if(!listaDataAtual.isEmpty()) {
 				//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0), andCpf), importacaoRegistrosPontoFrame);
