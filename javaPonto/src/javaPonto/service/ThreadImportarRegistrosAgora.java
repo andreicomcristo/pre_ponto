@@ -58,12 +58,22 @@ public class ThreadImportarRegistrosAgora implements Runnable{
 					
 					if(conexaoAcess!=null) {
 						if(!conexaoAcess.isClosed()){
-							conexaoAcess.close();
+							try {
+								conexaoAcess.close();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					if(conexaoFapeal!=null) {
 						if(!conexaoFapeal.isClosed()){
-							conexaoFapeal.close();
+							try {
+								conexaoFapeal.close();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					
@@ -75,11 +85,9 @@ public class ThreadImportarRegistrosAgora implements Runnable{
 				
 				if(problemaConexao==false) {
 					
-					DaoPonto daoPonto = new DaoPonto();
-					Integer horaAgora = daoPonto.buscarHoraAtual(ConnectionFactory.getConnection());
-					horaAgora = horaAgora - 3;
 					
-					if(/*horaAgora>=21 || horaAgora<4*/true ) {
+					
+					if(true ) {
 						
 						System.out.println("Iniciando :"+new Date());
 						importacaoRegistrosPontoFrame.setTitle("Coletando Registros");

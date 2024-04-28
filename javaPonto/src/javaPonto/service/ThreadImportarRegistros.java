@@ -58,12 +58,22 @@ public class ThreadImportarRegistros implements Runnable{
 					
 					if(conexaoAcess!=null) {
 						if(!conexaoAcess.isClosed()){
-							conexaoAcess.close();
+							try {
+								conexaoAcess.close();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					if(conexaoFapeal!=null) {
 						if(!conexaoFapeal.isClosed()){
-							conexaoFapeal.close();
+							try {
+								conexaoFapeal.close();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 					
