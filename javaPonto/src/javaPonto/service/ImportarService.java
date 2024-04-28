@@ -26,15 +26,21 @@ public class ImportarService {
 			if(!listaDataAtual.isEmpty()) {
 				//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0), andCpf), importacaoRegistrosPontoFrame);
 				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+			}else {
+				DaoPonto.escreverLog(null, "Data atual nao obtida do postgres.");
 			}
 		}else {
 			if(!listaDataAtual.isEmpty()) {
 				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+			}else {
+				DaoPonto.escreverLog(null, "Data atual nao obtida do postgres.");
 			}
 		}
 		
 		//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess( new java.sql.Date(2021-1900, 11, 1) ));
 	}
+	
+	
 	
 	public void trocarNomePorCpf() {
 		

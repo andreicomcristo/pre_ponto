@@ -46,7 +46,9 @@ public class DaoPonto {
 		try {
 			FileWriter arq = new FileWriter(caminho+nome);
 			PrintWriter gravarArq = new PrintWriter(arq);
-			gravarArq.printf(data+"-"+e.getMessage()+" ["+complemento+"]");
+			String mensagem = "";
+			if(e!=null) {mensagem = e.getMessage();}
+			gravarArq.printf(data+"-"+mensagem+" ["+complemento+"]");
 			arq.close();
 
 		} catch (Exception e1) {
@@ -679,27 +681,18 @@ public class DaoPonto {
 					if(!con.isClosed()){
 						for(int i=0;i<lista.size();i++){
 							
-							importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 							
-							if(registroJaCadastrado(lista.get(i), con) == false ){
-										
-										// nome da tebela
-										PreparedStatement stmt = null;
-										if(lista.get(i).getIdPessoaFk()!=null) {
-										stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)");
-										stmt.setString(1, lista.get(i).getCpf());            
-										stmt.setString(2, lista.get(i).getNome());
-										stmt.setString(3, lista.get(i).getNumeroPonto());
-										stmt.setDate(4,  lista.get(i).getMomento());
-										stmt.setTime(5, lista.get(i).getHora());
-										stmt.setString(6, lista.get(i).getSentido());
-										stmt.setString(7, lista.get(i).getRelogio());
-										stmt.setLong(8, lista.get(i).getIdUnidadeFk());
-										stmt.setLong(9, lista.get(i).getIdPessoaFk());
-										stmt.setString(10, "");
-										stmt.setString(11, "N");
-										}else {
-											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)");
+							
+							
+							try {
+								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
+								
+								if(registroJaCadastrado(lista.get(i), con) == false ){
+											
+											// nome da tebela
+											PreparedStatement stmt = null;
+											if(lista.get(i).getIdPessoaFk()!=null) {
+											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)");
 											stmt.setString(1, lista.get(i).getCpf());            
 											stmt.setString(2, lista.get(i).getNome());
 											stmt.setString(3, lista.get(i).getNumeroPonto());
@@ -708,15 +701,38 @@ public class DaoPonto {
 											stmt.setString(6, lista.get(i).getSentido());
 											stmt.setString(7, lista.get(i).getRelogio());
 											stmt.setLong(8, lista.get(i).getIdUnidadeFk());
-											stmt.setString(9, "");
-											stmt.setString(10, "N");
-										}
-		
-		
-										stmt.execute();
-										stmt.close();
-								
+											stmt.setLong(9, lista.get(i).getIdPessoaFk());
+											stmt.setString(10, "");
+											stmt.setString(11, "N");
+											}else {
+												stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)");
+												stmt.setString(1, lista.get(i).getCpf());            
+												stmt.setString(2, lista.get(i).getNome());
+												stmt.setString(3, lista.get(i).getNumeroPonto());
+												stmt.setDate(4,  lista.get(i).getMomento());
+												stmt.setTime(5, lista.get(i).getHora());
+												stmt.setString(6, lista.get(i).getSentido());
+												stmt.setString(7, lista.get(i).getRelogio());
+												stmt.setLong(8, lista.get(i).getIdUnidadeFk());
+												stmt.setString(9, "");
+												stmt.setString(10, "N");
+											}
+
+
+											stmt.execute();
+											stmt.close();
+									
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								DaoPonto.escreverLog(e, " TENTANDO INSERIR "+lista.get(i).getCpf()+" "+lista.get(i).getMomento()+" "+lista.get(i).getHora());
 							}
+							
+							
+							
+							
+							
+							
 						}
 					}  
 				}

@@ -12,8 +12,11 @@ public class Configuracao {
 	boolean exibirApagarRegistros = false;
 	
 	
-	int dias = 1;
-	//int dias = 2;
+	int minutosSleep = 25;
+	
+	
+	//int dias = 1;
+	int dias = 2;
 	//int dias = 10;
 	//int dias = 30;
 	//int dias = 60;
@@ -72,6 +75,10 @@ public class Configuracao {
 	
 	//Para HEMOAL MACEIO
 	//Long idUnidade = 12L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	
+	//Para HEMOAL ARAPIRACA
+	//Long idUnidade = 31L;	
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	//Para HOSPITAL DO CORACAO MACEIO
@@ -163,12 +170,15 @@ public class Configuracao {
 		this.exibirApagarRegistros = exibirApagarRegistros;
 	}
 
-	@Override
-	public String toString() {
-		return "Configuracao [exibirImportarRegistros=" + exibirImportarRegistros + ", exibirConverteCpf="
-				+ exibirConverteCpf + ", exibirApagarRegistros=" + exibirApagarRegistros + ", dias=" + dias
-				+ ", idUnidade=" + idUnidade + ", caminhoBanco=" + caminhoBanco + "]";
+	public int getMinutosSleep() {
+		return minutosSleep;
 	}
+
+	public void setMinutosSleep(int minutosSleep) {
+		this.minutosSleep = minutosSleep;
+	}
+
+	
 
 	
 	

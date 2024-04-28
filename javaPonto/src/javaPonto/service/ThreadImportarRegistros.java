@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import javaPonto.conexao.ConexaoAccess;
 import javaPonto.conexao.ConnectionFactory;
+import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
 import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 
@@ -31,65 +32,69 @@ public class ThreadImportarRegistros implements Runnable{
 	public void run() {
 
 		ImportarService importarService = new ImportarService();
-		
+		Configuracao configuracao = new Configuracao();
 			
 		while(true) {
 			
-			String resposta = "";
-			boolean problemaConexao = false;
-			Connection conexaoAcess = ConexaoAccess.getConnection();
-			Connection conexaoFapeal = ConnectionFactory.getConnection();
-			
 			try {
+				String resposta = "";
+				boolean problemaConexao = false;
+				Connection conexaoAcess = ConexaoAccess.getConnection();
+				Connection conexaoFapeal = ConnectionFactory.getConnection();
 				
-			conexaoAcess = ConexaoAccess.getConnection();
-			conexaoFapeal = ConnectionFactory.getConnection();
-				if(conexaoAcess==null) {resposta = resposta+"Conexao ZkTime nula. ";}
-				if(conexaoFapeal==null) {resposta = resposta+"Conexao Banco nula. ";}
-				resposta = resposta.trim();
-				
-				if(resposta.length()>0) {
-					problemaConexao=true;
-					importacaoRegistrosPontoFrame.setTitle(resposta+" "+new Date());
-					//JOptionPane.showMessageDialog(null, resposta+" "+new Date());
-				}
-				
-				if(conexaoAcess!=null) {
-					if(!conexaoAcess.isClosed()){
-						conexaoAcess.close();
-					}
-				}
-				if(conexaoFapeal!=null) {
-					if(!conexaoFapeal.isClosed()){
-						conexaoFapeal.close();
-					}
-				}
-				
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-			
-			if(problemaConexao==false) {
-				
-				DaoPonto daoPonto = new DaoPonto();
-				Integer horaAgora = daoPonto.buscarHoraAtual(ConnectionFactory.getConnection());
-				horaAgora = horaAgora - 3;
-				
-				if(/*horaAgora>=21 || horaAgora<4*/true ) {
+				try {
 					
-					System.out.println("Iniciando :"+new Date());
-					importacaoRegistrosPontoFrame.setTitle("Coletando Registros");
-					importarService.importarRegistrosPonto(importacaoRegistrosPontoFrame, dataInicial, dataFinal, andCpf);
-					importacaoRegistrosPontoFrame.setTitle("");
-					System.out.println("Findando  :"+new Date());
+				conexaoAcess = ConexaoAccess.getConnection();
+				conexaoFapeal = ConnectionFactory.getConnection();
+					if(conexaoAcess==null) {resposta = resposta+"Conexao ZkTime nula. ";}
+					if(conexaoFapeal==null) {resposta = resposta+"Conexao Banco nula. ";}
+					resposta = resposta.trim();
+					
+					if(resposta.length()>0) {
+						problemaConexao=true;
+						importacaoRegistrosPontoFrame.setTitle(resposta+" "+new Date());
+						//JOptionPane.showMessageDialog(null, resposta+" "+new Date());
+					}
+					
+					if(conexaoAcess!=null) {
+						if(!conexaoAcess.isClosed()){
+							conexaoAcess.close();
+						}
+					}
+					if(conexaoFapeal!=null) {
+						if(!conexaoFapeal.isClosed()){
+							conexaoFapeal.close();
+						}
+					}
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					DaoPonto.escreverLog(e1, " TENTANDO CONECTAR");
 				}
 				
+				
+				if(problemaConexao==false) {
+					
+					
+					if(true ) {
+						
+						System.out.println("Iniciando :"+new Date());
+						importacaoRegistrosPontoFrame.setTitle("Coletando Registros");
+						importarService.importarRegistrosPonto(importacaoRegistrosPontoFrame, dataInicial, dataFinal, andCpf);
+						importacaoRegistrosPontoFrame.setTitle("");
+						System.out.println("Findando  :"+new Date());
+					}
+					
+				}
+				
+				
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				DaoPonto.escreverLog(e2, " EXECUTANDO A TAREFA");
 			}
 			
 			try {
-				Thread.sleep(1000*60*30);
+				Thread.sleep(1000*60*configuracao.getMinutosSleep());
 				//Thread.sleep(1000*60*1);
 			} catch (Exception e) {
 				DaoPonto.escreverLog(e, "COLOCANDO A THREAD PARA DORMIR");
