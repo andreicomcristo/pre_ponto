@@ -103,8 +103,15 @@ public class ThreadImportarRegistros implements Runnable{
 				DaoPonto.escreverLog(e2, " EXECUTANDO A TAREFA");
 			}
 			
+			
+			
 			try {
-				Thread.sleep(1000*60*configuracao.getMinutosSleep());
+				
+				int tempoDeEsperaTotal = configuracao.getMinutosSleep();
+				for(int i=0;i<tempoDeEsperaTotal;i++) {
+					importacaoRegistrosPontoFrame.setTitle( (tempoDeEsperaTotal-i)+ " min para próximo ciclo. ("+tempoDeEsperaTotal+" min de intervalo)");
+					Thread.sleep(1000*60*1  );
+				}
 				//Thread.sleep(1000*60*1);
 			} catch (Exception e) {
 				DaoPonto.escreverLog(e, "COLOCANDO A THREAD PARA DORMIR");
