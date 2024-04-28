@@ -234,6 +234,50 @@ public class DaoPonto {
 
 	
 
+	public Integer buscarHoraAtual( Connection con) {
+		Integer resposta = 12; 
+		List<Integer> listaConsulta = new ArrayList<Integer>();
+
+		try {
+
+
+			try {
+
+				PreparedStatement stmt = null;
+				
+					stmt = con.prepareStatement(" SELECT (CAST(EXTRACT(HOUR FROM CURRENT_TIMESTAMP) AS INTEGER)) as hora ");
+					
+				
+				
+				
+				ResultSet rs = stmt.executeQuery();
+
+				while(rs.next()) {
+
+					Integer hora = rs.getInt("hora");
+					listaConsulta.add((hora)); //Ajustando o GMT-3	
+				}
+				if(!listaConsulta.isEmpty()) {
+					resposta = listaConsulta.get(0);
+				}
+
+			} finally {
+				try {
+
+				} catch (Exception e) {escreverLog(e, "HORA ATUAL NAO OBTIDA"  );
+				e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "HORA ATUAL NAO OBTIDA"  );
+		e.printStackTrace();
+		}
+
+		return resposta;
+
+	} 
+
+	
+
 	public boolean registroJaCadastrado(RegistroPonto registroPonto, Connection con) {
 		boolean resposta = false; 
 		List<String> listaConsulta = new ArrayList<String>();
@@ -335,7 +379,7 @@ public class DaoPonto {
 
 	} 
 
-	public List<RegistroPonto> selectListaNomesAccess(java.sql.Date dataConsulta) {
+	public List<RegistroPonto> selectListaNomesAccess(java.sql.Date dataConsulta, String andCpf) {
 		Configuracao configuracao = new Configuracao();
 		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
 
@@ -346,7 +390,7 @@ public class DaoPonto {
 
 			try {
 
-				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? order by CHECKINOUT.CHECKTIME");
+				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? "+andCpf+" order by CHECKINOUT.CHECKTIME");
 
 				stmt.setDate(1, dataConsulta);
 				
@@ -397,7 +441,7 @@ public class DaoPonto {
 
 
 	
-	public List<RegistroPonto> selectListaNomesAccessComDatas( String dataInicial, String dataFinal) {
+	public List<RegistroPonto> selectListaNomesAccessComDatas( String dataInicial, String dataFinal, String andCpf) {
 		Configuracao configuracao = new Configuracao();
 		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
 
@@ -408,7 +452,7 @@ public class DaoPonto {
 
 			try {
 
-				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? and CHECKINOUT.CHECKTIME < ?  order by CHECKINOUT.CHECKTIME");
+				PreparedStatement stmt = con.prepareStatement("select DISTINCT USERINFO.Name as nome , USERINFO.Badgenumber as numeroPonto,  CHECKINOUT.CHECKTIME as momento, case CHECKINOUT.CHECKTYPE when 'O' then 'S' when 'o' then 'S' when '0' then 'S' when '1' then 'E' when 'I' then 'E' when 'i' then 'E' else 'E' end as sentido , CHECKINOUT.SENSORID as relogio  from CHECKINOUT inner join USERINFO on CHECKINOUT.USERID = USERINFO.USERID where CHECKINOUT.CHECKTIME >= ? and CHECKINOUT.CHECKTIME < ? "+andCpf+" order by CHECKINOUT.CHECKTIME");
 
 				stmt.setString(1, dataInicial);
 				stmt.setString(2, dataFinal);
@@ -513,7 +557,7 @@ public class DaoPonto {
 
                         for(int i=0;i<lista.size();i++){
                             if(true){
-                                                                                   
+                            	                                                
 			PreparedStatement stmt = con.prepareStatement(""+lista.get(i));
 
             
@@ -525,6 +569,7 @@ public class DaoPonto {
 			con.close();
 
 		} catch (Exception e) {JOptionPane.showMessageDialog(null, e.getMessage());
+			DaoPonto.escreverLog(e, "PROBLEMA na Execucao do SQL");
 			e.printStackTrace();
 		} finally{
 
@@ -536,6 +581,50 @@ public class DaoPonto {
                 }
         }
     
+	
+
+	public List<java.sql.Date> selectMaximaDataPostgres() {
+
+		List<java.sql.Date> listaConsulta = new ArrayList<java.sql.Date>();
+
+		try {
+
+			con = ConnectionFactory.getConnection();
+
+			try {
+				if(con!=null) {
+					PreparedStatement stmt = con.prepareStatement(" SELECT CURRENT_TIMESTAMP as momento ");
+
+					ResultSet rs = stmt.executeQuery();
+
+					while(rs.next()) {
+
+						java.sql.Date momento = rs.getDate("momento");
+						Long momentoInicial = momento.getTime();
+						momentoInicial = momentoInicial - (configuracao.getDias()*24*60*60*10*10*10);//menos dois dias
+						java.sql.Date momentoFinal = new java.sql.Date(momentoInicial);   
+						listaConsulta.add(momentoFinal);
+
+					}
+				}
+			} finally {
+				try {
+					if(con!=null){
+						if(!con.isClosed()){
+							con.close();
+						}}
+				} catch (Exception e) {escreverLog(e, "PEGANDO A DATA MAXIMA DOS REGISTROS NO ACCESS");
+				e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "PEGANDO A DATA MAXIMA DOS REGISTROS NO ACCESS");
+		e.printStackTrace();
+		}
+
+		return listaConsulta;
+
+	} 
+
 	
 
 	public List<java.sql.Date> selectMaximaDataAccess() {

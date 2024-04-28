@@ -12,14 +12,14 @@ import javaPonto.conexao.ConnectionFactory;
 import javaPonto.dao.DaoPonto;
 import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 
-public class ThreadImportarRegistros implements Runnable{
+public class ThreadImportarRegistrosAgora implements Runnable{
 
 	ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame;
 	String dataInicial;
 	String dataFinal;
 	String andCpf;
 	
-	public ThreadImportarRegistros(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal,  String andCpf) {
+	public ThreadImportarRegistrosAgora(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal,  String andCpf) {
 		this.importacaoRegistrosPontoFrame = importacaoRegistrosPontoFrame;
 		this.dataInicial = dataInicial;
 		this.dataFinal = dataFinal;
@@ -33,7 +33,7 @@ public class ThreadImportarRegistros implements Runnable{
 		ImportarService importarService = new ImportarService();
 		
 			
-		while(true) {
+		
 			
 			String resposta = "";
 			boolean problemaConexao = false;
@@ -88,15 +88,7 @@ public class ThreadImportarRegistros implements Runnable{
 				
 			}
 			
-			try {
-				Thread.sleep(1000*60*30);
-				//Thread.sleep(1000*60*1);
-			} catch (Exception e) {
-				DaoPonto.escreverLog(e, "COLOCANDO A THREAD PARA DORMIR");
-			}
-		}
-		
-		
+			
 		
 		
 		

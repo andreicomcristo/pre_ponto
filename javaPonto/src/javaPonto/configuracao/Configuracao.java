@@ -12,22 +12,22 @@ public class Configuracao {
 	boolean exibirApagarRegistros = false;
 	
 	
-	
-	int dias = 2;
+	int dias = 1;
+	//int dias = 2;
 	//int dias = 10;
 	//int dias = 30;
 	//int dias = 60;
 	
 	
 	//Para o HGE
-	//Long idUnidade = 1L;
-	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
+	Long idUnidade = 1L;
+	String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
 	
 	//Para SESAU
-	Long idUnidade = 16L;	
-	String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+	//Long idUnidade = 16L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 
 	
 	//Para HOSPITAL REGIONAL DA MATA
@@ -86,7 +86,13 @@ public class Configuracao {
 	//Long idUnidade = 14L;	
 	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
+	//Para HOSPITAL RETGIONAL ALTO SERTAO
+	//Long idUnidade = 18L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
+	//Para UPA CIDADE UNIVERSITARIA
+	//Long idUnidade = 29L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
 	
 	
 	

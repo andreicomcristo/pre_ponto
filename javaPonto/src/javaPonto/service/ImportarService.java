@@ -18,18 +18,18 @@ public class ImportarService {
 	DaoPonto daoPonto = new DaoPonto();
 	
 	
-	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal) {
+	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal, String andCpf) {
 		
-		System.out.println(daoPonto.selectMaximaDataAccess().get(0));
-		
+		List<java.sql.Date> listaDataAtual = daoPonto.selectMaximaDataPostgres();
 		
 		if(dataInicial.length()==0|| dataFinal.length()==0) {
-			if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
-				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0)), importacaoRegistrosPontoFrame);
+			if(!listaDataAtual.isEmpty()) {
+				//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0), andCpf), importacaoRegistrosPontoFrame);
+				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
 			}
 		}else {
-			if(!daoPonto.selectMaximaDataAccess().isEmpty()) {
-				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal), importacaoRegistrosPontoFrame);
+			if(!listaDataAtual.isEmpty()) {
+				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
 			}
 		}
 		
@@ -38,7 +38,7 @@ public class ImportarService {
 	
 	public void trocarNomePorCpf() {
 		
-
+		
 		
 		List<String> listaSql = new ArrayList<String>();
         
@@ -68,6 +68,9 @@ public class ImportarService {
             JOptionPane.showMessageDialog(null, f.getMessage());
         }
 
+       
+        
+        
         
         if(!listaSql.isEmpty()){
             //Vendo como estava antes

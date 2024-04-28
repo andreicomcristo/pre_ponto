@@ -33,6 +33,8 @@ public class ConnectionFactory {
 	    return con;
     }    
 */ 
+	
+	
 	//Itec
     public static Connection getConnection()  {
 	    Connection con = null;
@@ -53,6 +55,28 @@ public class ConnectionFactory {
 	    return con;
     }    
 
+    
+    /*
+  //Contabo
+    public static Connection getConnection()  {
+	    Connection con = null;
+	    try {
+	        Class.forName ("org.postgresql.Driver");    
+	        
+	        Properties props = new Properties();
+	        
+	        props.setProperty("user", "postgres");
+	        props.setProperty("password", "c41p9huvx6");
+	        props.setProperty("currentSchema", "public");
+	        
+	                                                                // caminho / nome do banco / senha
+	         con =  DriverManager.getConnection ("jdbc:postgresql://154.38.164.151:5432/folha_hom", props);
+	            } catch (Exception e){DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O POSTGRES");
+	                
+	            }
+	    return con;
+    }    
+*/
     
     
 }
