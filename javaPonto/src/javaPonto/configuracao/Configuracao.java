@@ -15,8 +15,8 @@ public class Configuracao {
 	int minutosSleep = 25;
 	
 	
-	//int dias = 1;
-	int dias = 2;
+	int dias = 1;
+	//int dias = 2;
 	//int dias = 10;
 	//int dias = 30;
 	//int dias = 60;
