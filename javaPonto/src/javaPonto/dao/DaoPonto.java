@@ -290,40 +290,21 @@ public class DaoPonto {
 			try {
 
 				PreparedStatement stmt = null;
-				if(registroPonto.getIdPessoaFk()!=null) {
-					stmt = con.prepareStatement("select * from ponto_registros where numero_ponto = ? and data = ? and hora = ?  and cpf = ? and id_unidade_fk = ? and id_pessoa_fk = ?");
-					stmt.setString(1, registroPonto.getNumeroPonto());
-					stmt.setDate(2, registroPonto.getMomento());
-					stmt.setTime(3, registroPonto.getHora());
-					stmt.setString(4, registroPonto.getCpf());
-					stmt.setLong(5, registroPonto.getIdUnidadeFk());
-					stmt.setLong(6, registroPonto.getIdPessoaFk());
-				}else {
-					stmt = con.prepareStatement("select * from ponto_registros where numero_ponto = ? and data = ? and hora = ?  and cpf = ? and id_unidade_fk = ? ");
-					stmt.setString(1, registroPonto.getNumeroPonto());
-					stmt.setDate(2, registroPonto.getMomento());
-					stmt.setTime(3, registroPonto.getHora());
-					stmt.setString(4, registroPonto.getCpf());
-					stmt.setLong(5, registroPonto.getIdUnidadeFk());
-				}
+				
+					stmt = con.prepareStatement("select * from ponto_registros where  data = ? and hora = ?  and cpf = ? and id_unidade_fk = ? ");
+					
+					stmt.setDate(1, registroPonto.getMomento());
+					stmt.setTime(2, registroPonto.getHora());
+					stmt.setString(3, registroPonto.getCpf());
+					stmt.setLong(4, registroPonto.getIdUnidadeFk());
 				
 				
-
-				
-
-
-
 				ResultSet rs = stmt.executeQuery();
 
 				while(rs.next()) {
 
-					if(registroPonto.getSentido().equalsIgnoreCase("E")) {
-						if((rs.getString("sentido").equalsIgnoreCase("E")) || (rs.getString("sentido").equalsIgnoreCase("A")) || (rs.getString("sentido").equalsIgnoreCase("X"))   || (rs.getString("sentido").equalsIgnoreCase("S")) || (rs.getString("sentido").equalsIgnoreCase("B")) || (rs.getString("sentido").equalsIgnoreCase("Y"))   ) {resposta = true; break;}
-					}
 					
-					if(registroPonto.getSentido().equalsIgnoreCase("S")) {
-						if((rs.getString("sentido").equalsIgnoreCase("E")) || (rs.getString("sentido").equalsIgnoreCase("A")) || (rs.getString("sentido").equalsIgnoreCase("X"))   || (rs.getString("sentido").equalsIgnoreCase("S")) || (rs.getString("sentido").equalsIgnoreCase("B")) || (rs.getString("sentido").equalsIgnoreCase("Y"))  ) {resposta = true; break;}
-					}
+						resposta = true; break;
 					
 
 				}
