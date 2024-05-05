@@ -12,7 +12,7 @@ public class Configuracao {
 	boolean exibirApagarRegistros = false;
 	
 	
-	int minutosSleep = 25;
+	int minutosSleep = 10;
 	
 	
 	int dias = 1;
@@ -27,6 +27,11 @@ public class Configuracao {
 	String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
+	
+	//Para IB GATTO
+	//Long idUnidade = 17L;	
+	//String caminhoBanco = "jdbc:ucanaccess://c:/zktime/att2000.mdb";
+
 	
 	//Para SESAU
 	//Long idUnidade = 16L;	
