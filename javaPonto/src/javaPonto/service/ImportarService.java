@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import javaPonto.conexao.ConexaoAccess;
+import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
 import javaPonto.domain.RegistroPonto;
 import javaPonto.frame.ImportacaoRegistrosPontoFrame;
@@ -15,24 +17,63 @@ import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 	
 public class ImportarService {
 	
-	DaoPonto daoPonto = new DaoPonto();
+	DaoPonto daoPonto;
+	Configuracao configuracao;
 	
+	public void setDaoPonto(DaoPonto daoPonto) {
+		this.daoPonto = daoPonto;
+	}
+	
+	public void setConfiguracao(Configuracao configuracao) {
+		this.configuracao = configuracao;
+	}
 	
 	public void importarRegistrosPonto(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal, String andCpf) {
 		
-		List<java.sql.Date> listaDataAtual = daoPonto.selectMaximaDataPostgres();
+		DaoPonto daoPonto =  new DaoPonto();
+		daoPonto.setConfiguracao(configuracao);
+		ConexaoAccess conexaoAccess= new ConexaoAccess();
+		conexaoAccess.setConfiguracao(configuracao);
+		daoPonto.setConexaoAccess(conexaoAccess);
+		
+		List<java.sql.Date> listaDataAtual = daoPonto.selectMaximaDataPostgres(configuracao);
 		
 		
 		if(dataInicial.length()==0|| dataFinal.length()==0) {
 			if(!listaDataAtual.isEmpty()) {
+				
 				//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(daoPonto.selectMaximaDataAccess().get(0), andCpf), importacaoRegistrosPontoFrame);
-				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+				if(!configuracao.getCaminhoBanco().toUpperCase().contains("SQLITE")) {
+					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+					}else {
+						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+					}
+				}else {
+					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesSqlite(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+					}else {
+						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesSqlite(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
+					}
+				}
 			}else {
 				DaoPonto.escreverLog(null, "Data atual nao obtida do postgres.");
 			}
 		}else {
 			if(!listaDataAtual.isEmpty()) {
-				daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+				if(!configuracao.getCaminhoBanco().toUpperCase().contains("SQLITE")) {
+					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+					}else {
+						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+					}
+				}else {
+					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesSqliteComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+					}else {
+						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesSqliteComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
+					}
+				}
 			}else {
 				DaoPonto.escreverLog(null, "Data atual nao obtida do postgres.");
 			}
@@ -40,6 +81,73 @@ public class ImportarService {
 		
 		//daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccess( new java.sql.Date(2021-1900, 11, 1) ));
 	}
+	
+
+	
+	public  boolean acertarConfiguracoes(ArrayList<String> lista, Configuracao configuracao, DaoPonto daoPonto, ConexaoAccess conexaoAccess) {
+		boolean resposta = false;
+		configuracao.setIdUnidade( Long.parseLong( lista.get(0) ));
+		configuracao.setTipoRegistro(lista.get(1));
+		configuracao.setCaminhoBanco(lista.get(2));
+		configuracao.setConexaoDestino( lista.get(3) );
+		setConfiguracao(configuracao);
+		setDaoPonto(daoPonto);
+		conexaoAccess.setConfiguracao(configuracao);
+		daoPonto.setConexaoAccess(conexaoAccess); 
+		daoPonto.setConfiguracao(configuracao);
+		
+		
+		
+		
+		resposta = true;
+		return resposta;
+	}
+	
+	 public  ArrayList<String> splitStringIntoThreeParts(String input) {
+	        String[] parts = input.split(";", 4);
+	        ArrayList<String> result = new ArrayList<>();
+
+	        for (String part : parts) {
+	            result.add(part);
+	        }
+
+	        return result;
+	    }
+	
+	public String lerArquivoConfiguracao() {
+		
+		String str = "";
+        try {
+        	FileReader arq = new FileReader( "./conf.txt"  );
+            //FileReader arq = new FileReader( "c:/zktime/conf.txt"  );
+            BufferedReader lerArq = new BufferedReader(arq);
+            str = lerArq.readLine();
+                
+            while (str != null) {
+                
+            	if(str.length()>0) {
+            		return str; 
+            		
+            	}
+                
+              
+            DaoPonto.escreverLog(null, " TENTANDO INSERIR :"+str);
+            }
+            
+            
+            arq.close();
+        } catch (Exception f) {
+            JOptionPane.showMessageDialog(null, f.getMessage());
+        }
+
+       
+        
+        
+        return str;
+		
+	}
+	
+	
 	
 	
 	

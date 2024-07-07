@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import javaPonto.conexao.ConexaoAccess;
+import javaPonto.conexao.DialetoSQLite;
 import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
 import javaPonto.service.ImportarService;
@@ -30,10 +32,19 @@ import java.awt.Font;
 
 public class ImportacaoRegistrosPontoFrame extends JFrame {
 
-	DaoPonto daoPonto = new DaoPonto();
-	boolean threadViva = false;
-	Configuracao configuracao = new Configuracao();
+	
 	ImportarService importarService = new ImportarService();
+	Configuracao configuracao = new Configuracao();
+	DaoPonto daoPonto = new DaoPonto();
+	ConexaoAccess conexaoAccess = new ConexaoAccess();
+	boolean  dadosConfiguracao = importarService.acertarConfiguracoes( importarService.splitStringIntoThreeParts( importarService.lerArquivoConfiguracao()), configuracao, daoPonto, conexaoAccess); 
+	
+	
+	
+	
+	boolean threadViva = false;
+	
+	
 	
 	private JPanel contentPane;
 	
@@ -56,9 +67,13 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					ImportacaoRegistrosPontoFrame frame = new ImportacaoRegistrosPontoFrame();
-					frame.setVisible(true);
+					
 					frame.setFrame(frame);
+					frame.setVisible(false);
+					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -119,6 +134,9 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		JButton btnNewButton = new JButton("Thread Importar Registros de Ponto ["+configuracao.getDias()+" dia(s)] ou período (se tiver preenchido)");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
+				
 				
 				String dataInicial = "";
 				String dataFinal = "";
@@ -187,7 +205,7 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 				
 				
 				if(threadViva==false) {
-				ThreadImportarRegistros threadImportarRegistros = new ThreadImportarRegistros(frame1, dataInicial, dataFinal, andCpf);
+				ThreadImportarRegistros threadImportarRegistros = new ThreadImportarRegistros(frame1, dataInicial, dataFinal, andCpf, configuracao,daoPonto, importarService, conexaoAccess);
 				Thread t1 = new Thread(threadImportarRegistros);
 				t1.start();
 				threadViva = true;
@@ -209,6 +227,8 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		JButton btnNewButton1 = new JButton("Thread Importar Registros AGORA ");
 		btnNewButton1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+							
 				
 				String dataInicial = "";
 				String dataFinal = "";
@@ -277,11 +297,12 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 				
 				
 				if(true) {
-				ThreadImportarRegistrosAgora threadImportarRegistrosAgora = new ThreadImportarRegistrosAgora(frame1, dataInicial, dataFinal,  andCpf);
+				ThreadImportarRegistrosAgora threadImportarRegistrosAgora = new ThreadImportarRegistrosAgora(frame1, dataInicial, dataFinal,  andCpf, configuracao,daoPonto, importarService, conexaoAccess);
 				Thread t2 = new Thread(threadImportarRegistrosAgora);
 				t2.start();
 				//threadViva = true;
 				}
+				
 				
 				
 			}
@@ -294,7 +315,7 @@ public class ImportacaoRegistrosPontoFrame extends JFrame {
 		
 		
 		
-		JLabel lblNewLabel = new JLabel(daoPonto.selectUnidade().getNome()+"-"+ daoPonto.selectUnidade().getSigla());
+		JLabel lblNewLabel = new JLabel(daoPonto.selectUnidade(configuracao.getIdUnidade()).getNome()+"-"+ daoPonto.selectUnidade(configuracao.getIdUnidade()).getSigla());
 		lblNewLabel.setBounds(108, 11, 482, 14);
 		lblNewLabel.setForeground(Color.red);
 		contentPane.add(lblNewLabel);

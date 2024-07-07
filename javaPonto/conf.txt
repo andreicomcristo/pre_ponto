@@ -1,0 +1,1 @@
+10;ACESSO;jdbc:sqlite:C:\\sqlite\\acesso.sqlite;

@@ -5,11 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
+import javaPonto.service.ImportarService;
 
 
 public class ConnectionFactory {
 
+	
+	
 	// Conexao com postgres
 	
 	//Fapeal
@@ -35,26 +39,58 @@ public class ConnectionFactory {
 */ 
 	
 	
-	//Itec
-    public static Connection getConnection()  {
+	
+    public static Connection getConnection(Configuracao configuracao)  {
 	    Connection con = null;
 	    try {
 	        Class.forName ("org.postgresql.Driver");    
 	        
 	        Properties props = new Properties();
 	        
-	        props.setProperty("user", "postgres");
-	        props.setProperty("password", "465dGbZK");
-	        props.setProperty("currentSchema", "public");
 	        
-	                                                                // caminho / nome do banco / senha
-	         con =  DriverManager.getConnection ("jdbc:postgresql://186.249.51.220:5432/folha", props);
-	            } catch (Exception e){DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O POSTGRES");
-	                
-	            }
+	        if(configuracao.getConexaoDestino().length()==0) {
+	        	ImportarService importarService = new ImportarService();
+	        	configuracao.setConexaoDestino (importarService.splitStringIntoThreeParts( importarService.lerArquivoConfiguracao()).get(3));
+	        }
+	        
+	        
+	        
+	        //Itec Sesau
+	        if(configuracao.getConexaoDestino().equalsIgnoreCase("SESAU")){
+	        
+		        props.setProperty("user", "postgres");
+		        props.setProperty("password", "465dGbZK");
+		        props.setProperty("currentSchema", "public");
+		        
+		                                                                // caminho / nome do banco / senha
+		         con =  DriverManager.getConnection ("jdbc:postgresql://186.249.53.197:5432/folha", props);
+	        }
+	        
+	        //UNCISAL
+	        if(configuracao.getConexaoDestino().equalsIgnoreCase("UNCISAL")){
+
+		        props.setProperty("user", "postgres");
+		        props.setProperty("password", "g50WTMHM");
+		        props.setProperty("currentSchema", "public");
+		        
+		                                                                // caminho / nome do banco / senha
+		         con =  DriverManager.getConnection ("jdbc:postgresql://172.21.0.37:5432/folha", props);
+
+
+	        }
+	        
+		            } catch (Exception e){DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O POSTGRES");
+		                
+		            }
+	    	
+	        
+	       
+	           
 	    return con;
     }    
 
+    
+    
     
     /*
   //Contabo

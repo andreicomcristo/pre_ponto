@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,14 +17,30 @@ import javax.swing.JOptionPane;
 
 import javaPonto.conexao.ConexaoAccess;
 import javaPonto.conexao.ConnectionFactory;
+import javaPonto.conexao.DialetoSQLite;
 import javaPonto.configuracao.Configuracao;
 import javaPonto.domain.RegistroPonto;
 import javaPonto.domain.Unidade;
 import javaPonto.frame.ImportacaoRegistrosPontoFrame;
 
+
+
 public class DaoPonto {
 
-	Configuracao configuracao = new Configuracao();
+	
+	Configuracao configuracao;
+	
+	ConexaoAccess conexaoAccess;
+	
+	public void setConfiguracao(Configuracao configuracao) {
+		this.configuracao = configuracao;
+	}
+	
+	public void setConexaoAccess(ConexaoAccess conexaoAccess) {
+		this.conexaoAccess = conexaoAccess;
+	}
+	
+	
 	
 	Connection con = null;
 	
@@ -91,14 +109,14 @@ public class DaoPonto {
 	}
 
 	
-	public Unidade selectUnidade() {
+	public Unidade selectUnidade(Long idUnidade) {
 
-		Configuracao configuracao = new Configuracao();
-		Long idUnidade = configuracao.getIdUnidade();
+		
+		
 		Unidade unidadeResposta = new Unidade();
 
 		try {
-			con = ConnectionFactory.getConnection();
+			con = ConnectionFactory.getConnection(configuracao);
 
 			try {
 
@@ -325,6 +343,55 @@ public class DaoPonto {
 
 	} 
 
+	
+
+	public boolean registroJaCadastradoAcesso(RegistroPonto registroPonto, Connection con) {
+		boolean resposta = false; 
+		List<String> listaConsulta = new ArrayList<String>();
+
+		try {
+
+
+			try {
+
+				PreparedStatement stmt = null;
+				
+					stmt = con.prepareStatement("select * from ponto_registros_acesso where  data = ? and hora = ?  and cpf = ? and id_unidade_fk = ? ");
+					
+					stmt.setDate(1, registroPonto.getMomento());
+					stmt.setTime(2, registroPonto.getHora());
+					stmt.setString(3, registroPonto.getCpf());
+					stmt.setLong(4, registroPonto.getIdUnidadeFk());
+				
+				
+				ResultSet rs = stmt.executeQuery();
+
+				while(rs.next()) {
+
+					
+						resposta = true; break;
+					
+
+				}
+
+
+			} finally {
+				try {
+
+				} catch (Exception e) {escreverLog(e, "OLHANDO SE ESSE REGISTRO DE PONTO JA EXISTE NO POSTGRES. ID:"+registroPonto.getNumeroPonto()+" DATA: "+registroPonto.getMomento()+" HORA: "+registroPonto.getHora()+" Sentido: "+registroPonto.getSentido()+" CPF: "+registroPonto.getCpf()+" Unidade: "+registroPonto.getIdUnidadeFk()+""  );
+				e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "OLHANDO SE ESSE REGISTRO DE PONTO JA EXISTE NO POSTGRES. ID:"+registroPonto.getNumeroPonto()+" DATA: "+registroPonto.getMomento()+" HORA: "+registroPonto.getHora()+" Sentido: "+registroPonto.getSentido()+" CPF: "+registroPonto.getCpf()+" Unidade: "+registroPonto.getIdUnidadeFk()+""  );
+		e.printStackTrace();
+		}
+
+		return resposta;
+
+	} 
+
+
+	
 	public Long pegarIdPessoaFk(RegistroPonto registroPonto, Connection con) {
 		Long resposta = null; 
 		
@@ -361,15 +428,18 @@ public class DaoPonto {
 		return resposta;
 
 	} 
+	
+	
+	/////////////////////////////////////
 
 	public List<RegistroPonto> selectListaNomesAccess(java.sql.Date dataConsulta, String andCpf) {
-		Configuracao configuracao = new Configuracao();
+		
 		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
 
 		try {
 
-			con = ConexaoAccess.getConnection();
-			conPostgres = ConnectionFactory.getConnection();
+			con = conexaoAccess.getConnection();
+			conPostgres = ConnectionFactory.getConnection(configuracao);
 
 			try {
 
@@ -425,13 +495,13 @@ public class DaoPonto {
 
 	
 	public List<RegistroPonto> selectListaNomesAccessComDatas( String dataInicial, String dataFinal, String andCpf) {
-		Configuracao configuracao = new Configuracao();
+		
 		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
 
 		try {
 
-			con = ConexaoAccess.getConnection();
-			conPostgres = ConnectionFactory.getConnection();
+			con = conexaoAccess.getConnection();
+			conPostgres = ConnectionFactory.getConnection(configuracao);
 
 			try {
 
@@ -485,7 +555,180 @@ public class DaoPonto {
 
 	} 
 
+	//////////////////////////////////////////////////////
 	
+	
+	/////////////////////////////////////
+
+	
+	public List<RegistroPonto> selectListaNomesSqlite(java.sql.Date dataConsulta, String andCpf) {
+	    List<RegistroPonto> listaConsulta = new ArrayList<>();
+	    Connection con = null;
+
+	    andCpf = andCpf.toUpperCase();
+	    andCpf = andCpf.replace( "AND USERINFO.NAME" , "AND U.CPF"); 
+	    
+	    try {
+	        con = conexaoAccess.getConnectionSqlite();
+	        conPostgres = ConnectionFactory.getConnection(configuracao);
+
+	        String query = "SELECT distinct  l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,  l.idLogTypeAtDevice as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where l.idLogTypeAtDevice is not null and u.cpf is not null and l.time >= ? "+andCpf;
+	        query = DialetoSQLite.traduzirParaSQLite(query);
+	        PreparedStatement stmt = con.prepareStatement(query);
+
+	        stmt.setDate(1, dataConsulta);
+	        
+	        
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	        	
+	        	String formattedTime = rs.getString("formatted_time");
+	            
+	            
+	        	String relogio = rs.getString("deviceName");
+	            String nome = rs.getString("Name");
+	            String cpf = rs.getString("cpf");
+	            Long idUnidadeFk = configuracao.getIdUnidade();
+	            String numeroPonto = "";
+	        	String sentido = "";
+	        	if(rs.getInt("sentido")==2) {sentido = "E";} 
+	        	if(rs.getInt("sentido")==3) {sentido = "S";}
+	        	
+	        	
+	        	//Date dataMomento = new Date(formattedTime.subs, 0, 0, 0, 0, 0)
+	        	
+	        	Date momento = new Date( (Integer.parseInt((formattedTime.substring(0, 4)))-1900), (Integer.parseInt((formattedTime.substring(5, 7)))-1), (Integer.parseInt((formattedTime.substring(8, 10)))), (Integer.parseInt((formattedTime.substring(11, 13)))), (Integer.parseInt((formattedTime.substring(14, 16)))), (Integer.parseInt((formattedTime.substring(17, 19)))));
+	        	Time hora = new Time(momento.getTime());
+	        	
+	        	
+	        	RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, convertUtilDateToSqlDate( momento), hora, relogio, cpf, idUnidadeFk, null);
+	        	
+				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+				
+				if(cpf.length()==11) {
+					listaConsulta.add(registroPonto);
+				}
+	            
+	           
+	            
+	            
+	            
+	        }
+
+	        rs.close();
+	        stmt.close();
+
+	    } catch (Exception e) {
+	        escreverLog(e, "ERRO AO COLETAR REGISTROS NO SQLITE");
+	        e.printStackTrace();
+	    } finally {
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (Exception e) {
+	                escreverLog(e, "ERRO AO FECHAR A CONEXÃO COM O SQLITE");
+	                e.printStackTrace();
+	            }
+	        }
+	        
+	        if (conPostgres != null) {
+	            try {
+	            	conPostgres.close();
+	            } catch (Exception e) {
+	                escreverLog(e, "ERRO AO FECHAR A CONEXÃO COM O SQLITE");
+	                e.printStackTrace();
+	            }
+	        }
+	        
+	    }
+
+	    return listaConsulta;
+	}
+   
+	
+
+	public List<RegistroPonto> selectListaNomesSqliteComDatas(String dataInicial, String dataFinal, String andCpf) {
+	    List<RegistroPonto> listaConsulta = new ArrayList<>();
+	    Connection con = null;
+
+	    andCpf = andCpf.toUpperCase();
+	    andCpf = andCpf.replace( "AND USERINFO.NAME" , "AND U.CPF");  
+	    
+	    try {
+	        con = conexaoAccess.getConnectionSqlite();
+
+	        String query = "SELECT distinct l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,  l.idLogTypeAtDevice as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where l.idLogTypeAtDevice is not null and u.cpf is not null and l.time >= ? and l.time < ? "+andCpf;  
+	        query = DialetoSQLite.traduzirParaSQLite(query);
+	        PreparedStatement stmt = con.prepareStatement(query);
+
+	        stmt.setString(1, dataInicial);
+			stmt.setString(2, dataFinal);
+	        
+	        
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	        	
+	        	String formattedTime = rs.getString("formatted_time");
+	            
+	            
+	        	String relogio = rs.getString("deviceName");
+	            String nome = rs.getString("Name");
+	            String cpf = rs.getString("cpf");
+	            Long idUnidadeFk = configuracao.getIdUnidade();
+	            String numeroPonto = "";
+	        	String sentido = "";
+	        	if(rs.getInt("sentido")==2) {sentido = "E";} 
+	        	if(rs.getInt("sentido")==3) {sentido = "S";}
+	        	
+	        	
+	        	//Date dataMomento = new Date(formattedTime.subs, 0, 0, 0, 0, 0)
+	        	
+	        	Date momento = new Date( (Integer.parseInt((formattedTime.substring(0, 4)))-1900), (Integer.parseInt((formattedTime.substring(5, 7)))-1), (Integer.parseInt((formattedTime.substring(8, 10)))), (Integer.parseInt((formattedTime.substring(11, 13)))), (Integer.parseInt((formattedTime.substring(14, 16)))), (Integer.parseInt((formattedTime.substring(17, 19)))));
+	        	Time hora = new Time(momento.getTime());
+	        	
+	        	
+	        	RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, convertUtilDateToSqlDate( momento), hora, relogio, cpf, idUnidadeFk, null);
+	        	
+				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+				
+				if(cpf.length()==11) {
+					listaConsulta.add(registroPonto);
+				}
+	            
+	           
+	            
+	            
+	            
+	        }
+
+	        rs.close();
+	        stmt.close();
+
+	    } catch (Exception e) {
+	        escreverLog(e, "ERRO AO COLETAR REGISTROS NO SQLITE");
+	        e.printStackTrace();
+	    } finally {
+	        if (con != null) {
+	            try {
+	                con.close();
+	            } catch (Exception e) {
+	                escreverLog(e, "ERRO AO FECHAR A CONEXÃO COM O SQLITE");
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    return listaConsulta;
+	}
+   
+	
+	
+
+	
+
+	//////////////////////////////////////////////////////
 	
 	
 	public List<String> selectListaPontoNomeAccess() {
@@ -493,7 +736,7 @@ public class DaoPonto {
 
 		try {
 
-			con = ConexaoAccess.getConnection();
+			con = conexaoAccess.getConnection();
 
 			try {
 
@@ -536,7 +779,7 @@ public class DaoPonto {
 
 		try {
 
-			con = ConexaoAccess.getConnection();
+			con = conexaoAccess.getConnection();
 
                         for(int i=0;i<lista.size();i++){
                             if(true){
@@ -566,13 +809,16 @@ public class DaoPonto {
     
 	
 
-	public List<java.sql.Date> selectMaximaDataPostgres() {
+	public List<java.sql.Date> selectMaximaDataPostgres(Configuracao configuracao) {
 
+		
+		
+		
 		List<java.sql.Date> listaConsulta = new ArrayList<java.sql.Date>();
 
 		try {
 
-			con = ConnectionFactory.getConnection();
+			con = ConnectionFactory.getConnection(configuracao);
 
 			try {
 				if(con!=null) {
@@ -581,12 +827,9 @@ public class DaoPonto {
 					ResultSet rs = stmt.executeQuery();
 
 					while(rs.next()) {
-
+						
 						java.sql.Date momento = rs.getDate("momento");
-						Long momentoInicial = momento.getTime();
-						momentoInicial = momentoInicial - (configuracao.getDias()*24*60*60*10*10*10);//menos dois dias
-						java.sql.Date momentoFinal = new java.sql.Date(momentoInicial);   
-						listaConsulta.add(momentoFinal);
+						listaConsulta.add(subtractOneDay(momento));
 
 					}
 				}
@@ -616,7 +859,7 @@ public class DaoPonto {
 
 		try {
 
-			con = ConexaoAccess.getConnection();
+			con = conexaoAccess.getConnection();
 
 			try {
 				if(con!=null) {
@@ -656,8 +899,8 @@ public class DaoPonto {
 
 		try {
 			if(!lista.isEmpty()){	
-				Configuracao configuracao = new Configuracao();
-				con = ConnectionFactory.getConnection();
+				
+				con = ConnectionFactory.getConnection(configuracao);
 				if(con!=null){
 					if(!con.isClosed()){
 						for(int i=0;i<lista.size();i++){
@@ -673,7 +916,7 @@ public class DaoPonto {
 											// nome da tebela
 											PreparedStatement stmt = null;
 											if(lista.get(i).getIdPessoaFk()!=null) {
-											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)");
+											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)  ");
 											stmt.setString(1, lista.get(i).getCpf());            
 											stmt.setString(2, lista.get(i).getNome());
 											stmt.setString(3, lista.get(i).getNumeroPonto());
@@ -686,7 +929,95 @@ public class DaoPonto {
 											stmt.setString(10, "");
 											stmt.setString(11, "N");
 											}else {
-												stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)");
+												stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)  ");
+												stmt.setString(1, lista.get(i).getCpf());            
+												stmt.setString(2, lista.get(i).getNome());
+												stmt.setString(3, lista.get(i).getNumeroPonto());
+												stmt.setDate(4,  lista.get(i).getMomento());
+												stmt.setTime(5, lista.get(i).getHora());
+												stmt.setString(6, lista.get(i).getSentido());
+												stmt.setString(7, lista.get(i).getRelogio());
+												stmt.setLong(8, lista.get(i).getIdUnidadeFk());
+												stmt.setString(9, "");
+												stmt.setString(10, "N");
+											}
+
+
+											stmt.execute();
+											stmt.close();
+									
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								DaoPonto.escreverLog(e, " TENTANDO INSERIR "+lista.get(i).getCpf()+" "+lista.get(i).getMomento()+" "+lista.get(i).getHora());
+							}
+							
+							
+							
+							
+							
+							
+						}
+					}  
+				}
+				if(con!=null){
+					if(!con.isClosed()){
+						con.close();
+					}
+				}
+			}
+		} catch (Exception e) {escreverLog(e, "INSERINDO REGISTROS NO POSTGRES." );
+		e.printStackTrace();
+		} finally{
+
+			try{
+				if(con!=null){
+					if(!con.isClosed()){
+						con.close();
+					}}
+
+			}catch (Exception e){escreverLog(e, "INSERINDO REGISTROS NO POSTGRES.");
+			}
+		}
+	}
+
+	
+
+	public void inserirRegistrosNoPostgresAcesso(List<RegistroPonto> lista, ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame){
+
+		try {
+			if(!lista.isEmpty()){	
+				
+				con = ConnectionFactory.getConnection(configuracao);
+				if(con!=null){
+					if(!con.isClosed()){
+						for(int i=0;i<lista.size();i++){
+							
+							
+							
+							
+							try {
+								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
+								
+								if(registroJaCadastradoAcesso(lista.get(i), con) == false ){
+											
+											// nome da tebela
+											PreparedStatement stmt = null;
+											if(lista.get(i).getIdPessoaFk()!=null) {
+											stmt = con.prepareStatement("insert into ponto_registros_acesso (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)  ");
+											stmt.setString(1, lista.get(i).getCpf());            
+											stmt.setString(2, lista.get(i).getNome());
+											stmt.setString(3, lista.get(i).getNumeroPonto());
+											stmt.setDate(4,  lista.get(i).getMomento());
+											stmt.setTime(5, lista.get(i).getHora());
+											stmt.setString(6, lista.get(i).getSentido());
+											stmt.setString(7, lista.get(i).getRelogio());
+											stmt.setLong(8, lista.get(i).getIdUnidadeFk());
+											stmt.setLong(9, lista.get(i).getIdPessoaFk());
+											stmt.setString(10, "");
+											stmt.setString(11, "N");
+											}else {
+												stmt = con.prepareStatement("insert into ponto_registros_acesso (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)  ");
 												stmt.setString(1, lista.get(i).getCpf());            
 												stmt.setString(2, lista.get(i).getNome());
 												stmt.setString(3, lista.get(i).getNumeroPonto());
@@ -741,14 +1072,13 @@ public class DaoPonto {
 	
 	
 	
-	
 	public List<RegistroPonto> apagarTabelaCheckInOutAccess(java.sql.Date dataConsulta) {
 		
 		List<RegistroPonto> listaConsulta = new ArrayList<RegistroPonto>();
 
 		try {
 
-			con = ConexaoAccess.getConnection();
+			con = conexaoAccess.getConnection();
 
 			try {
 
@@ -779,7 +1109,25 @@ public class DaoPonto {
 	} 
 
 	
+	public static java.sql.Date convertUtilDateToSqlDate(Date utilDate) {
+        if (utilDate != null) {
+            return new java.sql.Date(utilDate.getTime());
+        }
+        return null;
+    }
+
 	
+	
+	 public static java.sql.Date subtractOneDay(java.sql.Date date) {
+	        // Cria uma instância de Calendar
+	        Calendar calendar = Calendar.getInstance();
+	        // Define a data do calendário para a data fornecida
+	        calendar.setTime(date);
+	        // Subtrai um dia
+	        calendar.add(Calendar.DAY_OF_MONTH, -1);
+	        // Obtém a nova data do calendário e converte para java.sql.Date
+	        return new java.sql.Date(calendar.getTimeInMillis());
+	    }
 	
 	
 }

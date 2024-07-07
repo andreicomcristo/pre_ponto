@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8.jar"/>
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8-javadoc.jar"/>
 	<classpathentry kind="lib" path="src/javaPonto/bibioteca/conexao/sqlServer/mssql-jdbc-12.4.1.jre8-sources.jar"/>
+	<classpathentry kind="lib" path="conexao sqlite/sqlite-jdbc-3.27.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

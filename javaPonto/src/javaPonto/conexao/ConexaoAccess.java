@@ -2,21 +2,26 @@ package javaPonto.conexao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javaPonto.configuracao.Configuracao;
 import javaPonto.dao.DaoPonto;
+import org.sqlite.JDBC;	
 
 
 public class ConexaoAccess {
 
+	Configuracao configuracao;
 	
+	public void setConfiguracao(Configuracao configuracao) {
+		this.configuracao = configuracao;
+	}
 	
 	// Conexao com access
-    public static Connection getConnection()  {
+    public  Connection getConnection()  {
     	Connection con = null;
     	
     try {
-    	Configuracao configuracao = new Configuracao();
     	
     	Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
     	con =  DriverManager.getConnection (configuracao.getCaminhoBanco());
@@ -33,7 +38,7 @@ public class ConexaoAccess {
     
     
     
-    public static Connection getConnectionSqlServer() {
+    public  Connection getConnectionSqlServer() {
         Connection con = null;
 
         try {
@@ -56,6 +61,29 @@ public class ConexaoAccess {
     }
 	
 	
+   
+    
+    public  Connection getConnectionSqlite() {
+        Connection con = null;
+        try {
+        	
+            // Carrega a classe do driver SQLite
+            Class.forName("org.sqlite.JDBC");
+            
+            // URL de conexão para o banco de dados SQLite
+            //String url = "jdbc:sqlite:C:\\sqlite\\acesso.sqlite";
+            String url = configuracao.getCaminhoBanco();
+            
+            // Estabelece a conexão
+            con = DriverManager.getConnection(url);
+        } catch (ClassNotFoundException e) {
+            DaoPonto.escreverLog(e, "FALHA AO CARREGAR O DRIVER SQLITE");
+        } catch (SQLException e) {
+            DaoPonto.escreverLog(e, "FALHA NA CONEXÃO COM O SQLITE");
+        }
+        return con;
+    }
+    
     
     
 }

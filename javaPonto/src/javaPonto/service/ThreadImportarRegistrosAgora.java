@@ -20,34 +20,43 @@ public class ThreadImportarRegistrosAgora implements Runnable{
 	String dataFinal;
 	String andCpf;
 	
-	public ThreadImportarRegistrosAgora(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal,  String andCpf) {
+	Configuracao configuracao;
+	DaoPonto daoPonto;
+	ImportarService importarService;
+	ConexaoAccess conexaoAccess;
+	
+	public ThreadImportarRegistrosAgora(ImportacaoRegistrosPontoFrame importacaoRegistrosPontoFrame, String dataInicial, String dataFinal,  String andCpf, Configuracao configuracao, DaoPonto daoPonto, ImportarService importarService, ConexaoAccess conexaoAccess) {
 		this.importacaoRegistrosPontoFrame = importacaoRegistrosPontoFrame;
 		this.dataInicial = dataInicial;
 		this.dataFinal = dataFinal;
 		this.andCpf = andCpf;
+		this.configuracao = configuracao;
+		this.daoPonto = daoPonto;
+		this.importarService = importarService;
+		this.conexaoAccess = conexaoAccess;
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void run() {
 
-		ImportarService importarService = new ImportarService();
-		Configuracao configuracao = new Configuracao();
+		
+		
 			
 		
 			
 			try {
 				String resposta = "";
 				boolean problemaConexao = false;
-				Connection conexaoAcess = ConexaoAccess.getConnection();
-				Connection conexaoFapeal = ConnectionFactory.getConnection();
+				Connection conexaoAcess = conexaoAccess.getConnection();
+				Connection conexaoFapeal = ConnectionFactory.getConnection(configuracao);
 				
 				try {
 					
-				conexaoAcess = ConexaoAccess.getConnection();
-				conexaoFapeal = ConnectionFactory.getConnection();
-					if(conexaoAcess==null) {resposta = resposta+"Conexao ZkTime nula. ";}
-					if(conexaoFapeal==null) {resposta = resposta+"Conexao Banco nula. ";}
+				conexaoAcess = conexaoAccess.getConnection();
+				conexaoFapeal = ConnectionFactory.getConnection(configuracao);
+					if(conexaoAcess==null) {resposta = resposta+"Conexao Origem nula. ";}
+					if(conexaoFapeal==null) {resposta = resposta+"Conexao Destino nula. ";}
 					resposta = resposta.trim();
 					
 					if(resposta.length()>0) {

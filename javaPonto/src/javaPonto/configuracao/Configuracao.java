@@ -11,8 +11,15 @@ public class Configuracao {
 	
 	boolean exibirApagarRegistros = false;
 	
+	String conexaoDestino = "";
 	
 	int minutosSleep = 10;
+	
+
+	String tipoRegistro = "PONTO";
+	
+	Long idUnidade = null;	
+	String caminhoBanco = "";
 	
 	
 	int dias = 1;
@@ -23,8 +30,8 @@ public class Configuracao {
 	
 	
 	//Para o HGE
-	Long idUnidade = 1L;
-	String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
+	//Long idUnidade = 1L;
+	//String caminhoBanco = "jdbc:ucanaccess://k:/NPD/Database_ponto/att2000.mdb";
 	//String caminhoBanco = "jdbc:ucanaccess://C:/zktime/att2000.mdb";
 	
 	
@@ -184,6 +191,22 @@ public class Configuracao {
 	}
 
 	
+
+	public String getTipoRegistro() {
+		return tipoRegistro;
+	}
+
+	public void setTipoRegistro(String tipoRegistro) {
+		this.tipoRegistro = tipoRegistro;
+	}
+
+	public String getConexaoDestino() {
+		return conexaoDestino;
+	}
+
+	public void setConexaoDestino(String conexaoDestino) {
+		this.conexaoDestino = conexaoDestino;
+	}
 
 	
 	
