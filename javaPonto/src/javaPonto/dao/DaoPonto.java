@@ -912,6 +912,7 @@ public class DaoPonto {
 								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 								
 								if(registroJaCadastrado(lista.get(i), con) == false ){
+									if(registroJaCadastrado(lista.get(i), con) == false ){
 											
 											// nome da tebela
 											PreparedStatement stmt = null;
@@ -947,6 +948,7 @@ public class DaoPonto {
 											stmt.close();
 									
 								}
+							}
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								DaoPonto.escreverLog(e, " TENTANDO INSERIR "+lista.get(i).getCpf()+" "+lista.get(i).getMomento()+" "+lista.get(i).getHora());
@@ -1000,6 +1002,7 @@ public class DaoPonto {
 								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 								
 								if(registroJaCadastradoAcesso(lista.get(i), con) == false ){
+									if(registroJaCadastradoAcesso(lista.get(i), con) == false ){
 											
 											// nome da tebela
 											PreparedStatement stmt = null;
@@ -1035,6 +1038,7 @@ public class DaoPonto {
 											stmt.close();
 									
 								}
+							}
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								DaoPonto.escreverLog(e, " TENTANDO INSERIR "+lista.get(i).getCpf()+" "+lista.get(i).getMomento()+" "+lista.get(i).getHora());
