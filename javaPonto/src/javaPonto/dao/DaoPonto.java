@@ -392,8 +392,11 @@ public class DaoPonto {
 
 
 	
-	public Long pegarIdPessoaFk(RegistroPonto registroPonto, Connection con) {
+	public Long pegarIdPessoaFk(RegistroPonto registroPonto) {
 		Long resposta = null; 
+		
+		
+		Connection  con = ConnectionFactory.getConnection(configuracao);
 		
 		try {
 
@@ -416,7 +419,7 @@ public class DaoPonto {
 			
 			} finally {
 				try {
-
+					con.close();
 				} catch (Exception e) {escreverLog(e, "PEGANDO ID DA PESSOA POR CPF NO POSTGRES. CPF: "+registroPonto.getCpf()+"");
 				e.printStackTrace();
 				}
@@ -466,7 +469,7 @@ public class DaoPonto {
 					Long idUnidadeFk = configuracao.getIdUnidade();
 					
 					RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, momento, hora, relogio, cpf, idUnidadeFk, null);
-					if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+					if(cpf.length()==11) {/*registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto));*/}
 					
 					if(cpf.length()==11) {
 						listaConsulta.add(registroPonto);
@@ -529,7 +532,7 @@ public class DaoPonto {
 					Long idUnidadeFk = configuracao.getIdUnidade();
 					
 					RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, momento, hora, relogio, cpf, idUnidadeFk, null);
-					if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+					if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto));}
 					
 					if(cpf.length()==11) {
 						listaConsulta.add(registroPonto);
@@ -595,6 +598,13 @@ public class DaoPonto {
 	        	if(rs.getInt("sentido")==2) {sentido = "E";} 
 	        	if(rs.getInt("sentido")==3) {sentido = "S";}
 	        	
+	        	//Acertando sentido a partir do nome do relogio
+	        	if(relogio!=null) {
+	        		if(relogio.length()>0) {
+	        			if(relogio.substring(0, 1).equalsIgnoreCase("2")) {sentido = "E";}
+	        			if(relogio.substring(0, 1).equalsIgnoreCase("3")) {sentido = "S";}
+	        		}
+	        	}
 	        	
 	        	//Date dataMomento = new Date(formattedTime.subs, 0, 0, 0, 0, 0)
 	        	
@@ -604,7 +614,7 @@ public class DaoPonto {
 	        	
 	        	RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, convertUtilDateToSqlDate( momento), hora, relogio, cpf, idUnidadeFk, null);
 	        	
-				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto));}
 				
 				if(cpf.length()==11) {
 					listaConsulta.add(registroPonto);
@@ -691,7 +701,7 @@ public class DaoPonto {
 	        	
 	        	RegistroPonto registroPonto = new RegistroPonto(nome, numeroPonto, sentido, convertUtilDateToSqlDate( momento), hora, relogio, cpf, idUnidadeFk, null);
 	        	
-				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto, conPostgres));}
+				if(cpf.length()==11) {registroPonto.setIdPessoaFk(pegarIdPessoaFk(registroPonto));}
 				
 				if(cpf.length()==11) {
 					listaConsulta.add(registroPonto);
