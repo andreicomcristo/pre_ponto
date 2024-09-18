@@ -38,7 +38,6 @@ public class ImportarService {
 		
 		List<java.sql.Date> listaDataAtual = daoPonto.selectMaximaDataPostgres(configuracao);
 		
-		
 		if(dataInicial.length()==0|| dataFinal.length()==0) {
 			if(!listaDataAtual.isEmpty()) {
 				
@@ -50,7 +49,7 @@ public class ImportarService {
 						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesAccess(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
 					}
 				}else {
-					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+					if(configuracao.getTipoRegistro().toUpperCase().contains("PONTO")) {
 						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesSqlite(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
 					}else {
 						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesSqlite(listaDataAtual.get(0), andCpf), importacaoRegistrosPontoFrame);
@@ -62,13 +61,13 @@ public class ImportarService {
 		}else {
 			if(!listaDataAtual.isEmpty()) {
 				if(!configuracao.getCaminhoBanco().toUpperCase().contains("SQLITE")) {
-					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+					if(configuracao.getTipoRegistro().toUpperCase().contains("PONTO")) {
 						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
 					}else {
 						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesAccessComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
 					}
 				}else {
-					if(!configuracao.getTipoRegistro().toUpperCase().contains("ACESSO")) {
+					if(configuracao.getTipoRegistro().toUpperCase().contains("PONTO")) {
 						daoPonto.inserirRegistrosNoPostgres(daoPonto.selectListaNomesSqliteComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);
 					}else {
 						daoPonto.inserirRegistrosNoPostgresAcesso(daoPonto.selectListaNomesSqliteComDatas(dataInicial, dataFinal, andCpf), importacaoRegistrosPontoFrame);

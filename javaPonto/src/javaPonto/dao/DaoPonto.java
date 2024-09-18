@@ -568,6 +568,8 @@ public class DaoPonto {
 	    List<RegistroPonto> listaConsulta = new ArrayList<>();
 	    Connection con = null;
 
+
+	    
 	    andCpf = andCpf.toUpperCase();
 	    andCpf = andCpf.replace( "AND USERINFO.NAME" , "AND U.CPF"); 
 	    
@@ -575,11 +577,18 @@ public class DaoPonto {
 	        con = conexaoAccess.getConnectionSqlite();
 	        conPostgres = ConnectionFactory.getConnection(configuracao);
 
-	        String query = "SELECT distinct  l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,  l.idLogTypeAtDevice as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where l.idLogTypeAtDevice is not null and u.cpf is not null and l.time >= ? "+andCpf;
+	        String query = "SELECT distinct  l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,   CAST(l.idLogTypeAtDevice AS TEXT) as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where  u.cpf is not null and strftime('%Y-%m-%d %H:%M:%S', l.time)  >= ? "+andCpf;
 	        query = DialetoSQLite.traduzirParaSQLite(query);
 	        PreparedStatement stmt = con.prepareStatement(query);
 
-	        stmt.setDate(1, dataConsulta);
+	        String ano = (dataConsulta.getYear()+1900)+"";
+	        while(ano.length()<4) {ano = "0"+ano;}
+	        String mes = (dataConsulta.getMonth()+1)+"";
+	        while(mes.length()<2) {mes = "0"+mes;}
+	        String dia = dataConsulta.getDate()+"";
+	        while(dia.length()<2) {dia = "0"+dia;}
+	        
+	        stmt.setString(1, ano+"-"+mes+"-"+dia);
 	        
 	        
 	        ResultSet rs = stmt.executeQuery();
@@ -595,9 +604,10 @@ public class DaoPonto {
 	            Long idUnidadeFk = configuracao.getIdUnidade();
 	            String numeroPonto = "";
 	        	String sentido = "";
-	        	if(rs.getInt("sentido")==2) {sentido = "E";} 
-	        	if(rs.getInt("sentido")==3) {sentido = "S";}
-	        	
+	        	if(rs.getString("sentido")!=null) {
+	        		if(rs.getString("sentido").equalsIgnoreCase("2")) {sentido = "E";} 
+	        		if(rs.getString("sentido").equalsIgnoreCase("3")) {sentido = "S";}
+	        	}
 	        	//Acertando sentido a partir do nome do relogio
 	        	if(relogio!=null) {
 	        		if(relogio.length()>0) {
@@ -668,10 +678,11 @@ public class DaoPonto {
 	    try {
 	        con = conexaoAccess.getConnectionSqlite();
 
-	        String query = "SELECT distinct l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,  l.idLogTypeAtDevice as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where l.idLogTypeAtDevice is not null and u.cpf is not null and l.time >= ? and l.time < ? "+andCpf;  
+	        String query = "SELECT distinct l.deviceName,   strftime('%Y-%m-%d %H:%M:%S', l.time) AS formatted_time,  l.idUser,  l.userName,  CAST(l.idLogTypeAtDevice AS TEXT) as sentido,  u.cpf as cpf, u.name as name FROM 	 Logs l JOIN   Users u ON l.idUser = u.id where  u.cpf is not null and strftime('%Y-%m-%d %H:%M:%S', l.time) >= ? and strftime('%Y-%m-%d %H:%M:%S', l.time) < ? "+andCpf;  
 	        query = DialetoSQLite.traduzirParaSQLite(query);
 	        PreparedStatement stmt = con.prepareStatement(query);
-
+	        
+	        
 	        stmt.setString(1, dataInicial);
 			stmt.setString(2, dataFinal);
 	        
@@ -689,8 +700,18 @@ public class DaoPonto {
 	            Long idUnidadeFk = configuracao.getIdUnidade();
 	            String numeroPonto = "";
 	        	String sentido = "";
-	        	if(rs.getInt("sentido")==2) {sentido = "E";} 
-	        	if(rs.getInt("sentido")==3) {sentido = "S";}
+	        	if(rs.getString("sentido")!=null) {
+	        		if(rs.getString("sentido").equalsIgnoreCase("2")) {sentido = "E";} 
+	        		if(rs.getString("sentido").equalsIgnoreCase("3")) {sentido = "S";}
+	        	}
+	        	
+	        	//Acertando sentido a partir do nome do relogio
+	        	if(relogio!=null) {
+	        		if(relogio.length()>0) {
+	        			if(relogio.substring(0, 1).equalsIgnoreCase("2")) {sentido = "E";}
+	        			if(relogio.substring(0, 1).equalsIgnoreCase("3")) {sentido = "S";}
+	        		}
+	        	}
 	        	
 	        	
 	        	//Date dataMomento = new Date(formattedTime.subs, 0, 0, 0, 0, 0)
@@ -715,6 +736,8 @@ public class DaoPonto {
 
 	        rs.close();
 	        stmt.close();
+	        
+	        
 
 	    } catch (Exception e) {
 	        escreverLog(e, "ERRO AO COLETAR REGISTROS NO SQLITE");

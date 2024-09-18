@@ -54,7 +54,6 @@ public class ConnectionFactory {
 	        }
 	        
 	        
-	        
 	        //Itec Sesau
 	        if(configuracao.getConexaoDestino().equalsIgnoreCase("SESAU")){
 	        
