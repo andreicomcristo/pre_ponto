@@ -945,6 +945,17 @@ public class DaoPonto {
 								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
 								
 								if(registroJaCadastrado(lista.get(i), con) == false ){
+									
+									if(lista.get(i).getSentido().equalsIgnoreCase("")) {
+										if(lista.get(i).getRelogio()!=null) {
+											if(lista.get(i).getRelogio().length()>0) {
+												if(lista.get(i).getRelogio().substring(0, 1).equalsIgnoreCase("2")) {lista.get(i).setSentido("E");}
+												if(lista.get(i).getRelogio().substring(0, 1).equalsIgnoreCase("3")) {lista.get(i).setSentido("S");}
+											}
+										}
+									}
+									
+									
 									if(registroJaCadastrado(lista.get(i), con) == false ){
 											
 											// nome da tebela
@@ -1033,6 +1044,18 @@ public class DaoPonto {
 							
 							try {
 								importacaoRegistrosPontoFrame.setTitle("Registro "+(i+1)+" de "+lista.size());
+								
+								
+								
+								if(lista.get(i).getSentido().equalsIgnoreCase("")) {
+									if(lista.get(i).getRelogio()!=null) {
+										if(lista.get(i).getRelogio().length()>0) {
+											if(lista.get(i).getRelogio().substring(0, 1).equalsIgnoreCase("2")) {lista.get(i).setSentido("E");}
+											if(lista.get(i).getRelogio().substring(0, 1).equalsIgnoreCase("3")) {lista.get(i).setSentido("S");}
+										}
+									}
+								}
+
 								
 								if(registroJaCadastradoAcesso(lista.get(i), con) == false ){
 									if(registroJaCadastradoAcesso(lista.get(i), con) == false ){
