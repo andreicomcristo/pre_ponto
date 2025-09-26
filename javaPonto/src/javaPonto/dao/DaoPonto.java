@@ -962,26 +962,26 @@ public class DaoPonto {
 											PreparedStatement stmt = null;
 											if(lista.get(i).getIdPessoaFk()!=null) {
 											stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)  ");
-											stmt.setString(1, lista.get(i).getCpf());            
-											stmt.setString(2, lista.get(i).getNome());
+											stmt.setString(1, lista.get(i).getCpf().toUpperCase());            
+											stmt.setString(2, lista.get(i).getNome().toUpperCase());
 											stmt.setString(3, lista.get(i).getNumeroPonto());
 											stmt.setDate(4,  lista.get(i).getMomento());
 											stmt.setTime(5, lista.get(i).getHora());
 											stmt.setString(6, lista.get(i).getSentido());
-											stmt.setString(7, lista.get(i).getRelogio());
+											stmt.setString(7, lista.get(i).getRelogio().toUpperCase());
 											stmt.setLong(8, lista.get(i).getIdUnidadeFk());
 											stmt.setLong(9, lista.get(i).getIdPessoaFk());
 											stmt.setString(10, "");
 											stmt.setString(11, "N");
 											}else {
 												stmt = con.prepareStatement("insert into ponto_registros (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)  ");
-												stmt.setString(1, lista.get(i).getCpf());            
-												stmt.setString(2, lista.get(i).getNome());
+												stmt.setString(1, lista.get(i).getCpf().toUpperCase());            
+												stmt.setString(2, lista.get(i).getNome().toUpperCase());
 												stmt.setString(3, lista.get(i).getNumeroPonto());
 												stmt.setDate(4,  lista.get(i).getMomento());
 												stmt.setTime(5, lista.get(i).getHora());
 												stmt.setString(6, lista.get(i).getSentido());
-												stmt.setString(7, lista.get(i).getRelogio());
+												stmt.setString(7, lista.get(i).getRelogio().toUpperCase());
 												stmt.setLong(8, lista.get(i).getIdUnidadeFk());
 												stmt.setString(9, "");
 												stmt.setString(10, "N");
@@ -1064,26 +1064,26 @@ public class DaoPonto {
 											PreparedStatement stmt = null;
 											if(lista.get(i).getIdPessoaFk()!=null) {
 											stmt = con.prepareStatement("insert into ponto_registros_acesso (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, id_pessoa_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?,  ?)  ");
-											stmt.setString(1, lista.get(i).getCpf());            
-											stmt.setString(2, lista.get(i).getNome());
+											stmt.setString(1, lista.get(i).getCpf().toUpperCase());            
+											stmt.setString(2, lista.get(i).getNome().toUpperCase());
 											stmt.setString(3, lista.get(i).getNumeroPonto());
 											stmt.setDate(4,  lista.get(i).getMomento());
 											stmt.setTime(5, lista.get(i).getHora());
 											stmt.setString(6, lista.get(i).getSentido());
-											stmt.setString(7, lista.get(i).getRelogio());
+											stmt.setString(7, lista.get(i).getRelogio().toUpperCase());
 											stmt.setLong(8, lista.get(i).getIdUnidadeFk());
 											stmt.setLong(9, lista.get(i).getIdPessoaFk());
 											stmt.setString(10, "");
 											stmt.setString(11, "N");
 											}else {
 												stmt = con.prepareStatement("insert into ponto_registros_acesso (cpf, nome, numero_ponto, data, hora, sentido, relogio, id_unidade_fk, observacao, indice_de_dobra) values ( ?,?,?,?,?, ?,?,?,?,?)  ");
-												stmt.setString(1, lista.get(i).getCpf());            
-												stmt.setString(2, lista.get(i).getNome());
+												stmt.setString(1, lista.get(i).getCpf().toUpperCase());            
+												stmt.setString(2, lista.get(i).getNome().toUpperCase());
 												stmt.setString(3, lista.get(i).getNumeroPonto());
 												stmt.setDate(4,  lista.get(i).getMomento());
 												stmt.setTime(5, lista.get(i).getHora());
 												stmt.setString(6, lista.get(i).getSentido());
-												stmt.setString(7, lista.get(i).getRelogio());
+												stmt.setString(7, lista.get(i).getRelogio().toUpperCase());
 												stmt.setLong(8, lista.get(i).getIdUnidadeFk());
 												stmt.setString(9, "");
 												stmt.setString(10, "N");

@@ -78,6 +78,21 @@ public class ConnectionFactory {
 
 	        }
 	        
+
+	        //MURICI
+	        if(configuracao.getConexaoDestino().equalsIgnoreCase("MURICI")){
+
+		        props.setProperty("user", "postgres");
+		        props.setProperty("password", "Chn5cIIVf4wk");
+		        props.setProperty("currentSchema", "public");
+		        
+		                                                                // caminho / nome do banco / senha
+		         con =  DriverManager.getConnection ("jdbc:postgresql://31.97.243.62:5432/folha", props);
+
+
+	        }
+	        
+	        
 		            } catch (Exception e){DaoPonto.escreverLog(e, "FALHA NA CONEXAO COM O POSTGRES");
 		                
 		            }
